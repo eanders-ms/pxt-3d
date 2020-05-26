@@ -1,5 +1,5 @@
 {
-    "name": "Cube",
+    "name": "3d",
     "dependencies": {
         "device": "*"
     },
@@ -8,7 +8,9 @@
         "main.blocks",
         "main.ts",
         "README.md",
-        "utils.ts"
+        "utils.ts",
+        "vec.ts",
+        "mat.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [
