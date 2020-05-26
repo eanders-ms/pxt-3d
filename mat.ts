@@ -25,6 +25,31 @@ class Matrix {
         ]);
     }
 
+    public static CreateFrustumProjection(left: number, right: number, bottom: number, top: number, znear: number, zfar: number): Matrix {
+        let X = 2 * znear / (right - left);
+        let Y = 2 * znear / (top - bottom);
+        let A = (right + left) / (right - left);
+        let B = (top + bottom) / (top - bottom);
+        let C = (0 - (zfar + znear)) / (zfar - znear);
+        let D = -2 * zfar * znear / (zfar - znear);
+
+        return Matrix.Create([
+            Vector.Create([X, 0, A, 0]),
+            Vector.Create([0, Y, B, 0]),
+            Vector.Create([0, 0, C, D]),
+            Vector.Create([0, 0, -1, 0])
+        ]);
+    }
+
+    public static CreatePerspectiveProjection(fovy: number, aspect: number, znear: number, zfar: number): Matrix {
+        let ymax = znear * Math.tan(fovy * Math.PI / 360.0);
+        let ymin = -ymax;
+        let xmin = ymin * aspect;
+        let xmax = ymax * aspect;
+
+        return Matrix.CreateFrustumProjection(xmin, xmax, ymin, ymax, znear, zfar);
+    }
+
     public setRows(rows: Vector[]): this {
         rows = (rows || []).slice(0, 4);
         while (rows.length < 4) {
@@ -119,29 +144,5 @@ class Matrix {
             rows.push(v);
         }
         return Matrix.Create(rows);
-    }
-
-    public static CreateFrustumProjection(left: number, right: number, bottom: number, top: number, znear: number, zfar: number): Matrix {
-        let X = 2 * znear / (right - left);
-        let Y = 2 * znear / (top - bottom);
-        let A = (right + left) / (right - left);
-        let B = (top + bottom) / (top - bottom);
-        let C = (0 - (zfar + znear)) / (zfar - znear);
-        let D = -2 * zfar * znear / (zfar - znear);
-
-        return Matrix.Create([
-            Vector.Create([X, 0, A, 0]),
-            Vector.Create([0, Y, B, 0]),
-            Vector.Create([0, 0, C, D]),
-            Vector.Create([0, 0, -1, 0])
-        ]);
-    }
-    public static CreatePerspectiveProjection(fovy: number, aspect: number, znear: number, zfar: number): Matrix {
-        let ymax = znear * Math.tan(fovy * Math.PI / 360.0);
-        let ymin = -ymax;
-        let xmin = ymin * aspect;
-        let xmax = ymax * aspect;
-
-        return Matrix.CreateFrustumProjection(xmin, xmax, ymin, ymax, znear, zfar);
     }
 }
