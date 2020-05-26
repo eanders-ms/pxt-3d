@@ -1,34 +1,39 @@
-// Add your code here
-
 class Vector {
-    public els: number[];
-    public get x() { return this.els[0]; }
-    public set x(v) { this.els[0] = v; }
-    public get y() { return this.els[1]; }
-    public set y(v) { this.els[1] = v; }
-    public get z() { return this.els[2]; }
-    public set z(v) { this.els[2] = v; }
+    private els: number[];
 
     public static Create(els: number[]): Vector {
         return new Vector().setElements(els);
     }
 
+    public static Zero(n: number): Vector {
+        n = n >= 0 ? n : 0;
+        const els: number[] = [];
+        els.length = n;
+        return new Vector().setElements(els);
+    }
+
     public setElements(els: number[]): this {
-        this.els = (els || [0, 0, 0]).slice();
-        this.els.length = 3;
+        this.els = (els || []).slice();
         return this;
+    }
+
+    public dup(): Vector {
+        return Vector.Create(this.els);
+    }
+
+    public e(i: number): number | undefined {
+        if (i >= 0 && i < this.els.length) return this.els[i];
+        return undefined;
     }
 
     public map(fn: (x: number, i: number) => number) {
         const els: number[] = [];
-        this.each((x, i) => {
-            els.push(fn(x, i));
-        });
+        this.each((x, i) => els.push(fn(x, i)));
         return Vector.Create(els);
     }
 
     public each(fn: (x: number, i: number) => void) {
-        for (let i = 0; i < 3; ++i) {
+        for (let i = 0; i < this.els.length; ++i) {
             fn(this.els[i], i);
         }
     }
@@ -45,15 +50,21 @@ class Vector {
         return this.map((x, i) => x * rhs.els[i]);
     }
 
-    public dot(rhs: Vector): number {
-        return this.x * rhs.x + this.y * rhs.y + this.z * rhs.z;
+    public dot3(rhs: Vector): number {
+        if (this.els.length < 3 || rhs.els.length < 3) return undefined;
+        let product = 0;
+        for (let i = 0; i < 3; ++i) {
+            product += this.els[i] * rhs.els[i];
+        }
+        return product;
     }
 
-    public cross(rhs: Vector): Vector {
-        return Vector.Create(
-            [this.y * rhs.z - this.z * rhs.y,
-            this.z * rhs.x - this.x * rhs.z,
-            this.x * rhs.y - this.y * rhs.x]
-        );
+    public cross3(rhs: Vector): Vector {
+        if (this.els.length < 3 || rhs.els.length < 3) return undefined;
+        return Vector.Create([
+            this.e(1) * rhs.e(2) - this.e(2) * rhs.e(1),
+            this.e(2) * rhs.e(0) - this.e(0) * rhs.e(2),
+            this.e(0) * rhs.e(1) - this.e(1) * rhs.e(0),
+        ]);
     }
 }
