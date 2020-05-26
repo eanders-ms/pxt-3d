@@ -12,6 +12,10 @@ class Vector {
         return new Vector().setElements(els);
     }
 
+    public static X() { return Vector.Create([1, 0, 0]); }
+    public static Y() { return Vector.Create([0, 1, 0]); }
+    public static Z() { return Vector.Create([0, 0, 1]); }
+
     public setElements(els: number[]): this {
         this.els = (els || []).slice();
         return this;
@@ -75,5 +79,19 @@ class Vector {
             this.e(2) * rhs.e(0) - this.e(0) * rhs.e(2),
             this.e(0) * rhs.e(1) - this.e(1) * rhs.e(0),
         ]);
+    }
+
+    public lengthSq(): number {
+        return this.dot3(this);
+    }
+
+    public length(): number {
+        return Math.sqrt(this.length());
+    }
+
+    public normal(): Vector {
+        const len = this.length();
+        if (!len) { return undefined; }
+        return this.map((x) => x / len);
     }
 }

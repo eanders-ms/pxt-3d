@@ -8,9 +8,10 @@
         "main.blocks",
         "main.ts",
         "README.md",
-        "utils.ts",
         "vec.ts",
-        "mat.ts"
+        "mat.ts",
+        "line.ts",
+        "plane.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [

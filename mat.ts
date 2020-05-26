@@ -22,7 +22,7 @@ class Matrix {
             Vector.Zero(4),
             Vector.Zero(4),
             Vector.Zero(4),
-        ]);        
+        ]);
     }
 
     public setRows(rows: Vector[]): this {
@@ -33,11 +33,11 @@ class Matrix {
         for (let i = 0; i < rows.length; ++i) {
             if (rows[i].dimension() < 4) {
                 rows[i] = Vector.Zero(4);
-            } 
+            }
         }
         this.rows = [];
         rows.forEach(function (value: Vector, index: number) {
-           this.rows.push(value.dup()); 
+            this.rows.push(value.dup());
         });
         return this;
     }
@@ -115,10 +115,33 @@ class Matrix {
         }
         const rows: Vector[] = [];
         for (let row = 0; row < this.rows.length; ++row) {
-            const v = rows[row] = Vector.Zero(4);
-            for (let col = 0; col < this.rows[0].dimension(); ++col) {
-                v.setElement()
-            }
+            const v = this.rows[row].map((x, i) => x * other.e(row, i));
+            rows.push(v);
         }
+        return Matrix.Create(rows);
+    }
+
+    public static CreateFrustumProjection(left: number, right: number, bottom: number, top: number, znear: number, zfar: number): Matrix {
+        let X = 2 * znear / (right - left);
+        let Y = 2 * znear / (top - bottom);
+        let A = (right + left) / (right - left);
+        let B = (top + bottom) / (top - bottom);
+        let C = (0 - (zfar + znear)) / (zfar - znear);
+        let D = -2 * zfar * znear / (zfar - znear);
+
+        return Matrix.Create([
+            Vector.Create([X, 0, A, 0]),
+            Vector.Create([0, Y, B, 0]),
+            Vector.Create([0, 0, C, D]),
+            Vector.Create([0, 0, -1, 0])
+        ]);
+    }
+    public static CreatePerspectiveProjection(fovy: number, aspect: number, znear: number, zfar: number): Matrix {
+        let ymax = znear * Math.tan(fovy * Math.PI / 360.0);
+        let ymin = -ymax;
+        let xmin = ymin * aspect;
+        let xmax = ymax * aspect;
+
+        return Matrix.CreateFrustumProjection(xmin, xmax, ymin, ymax, znear, zfar);
     }
 }
