@@ -30,6 +30,11 @@ class Matrix {
         while (rows.length < 4) {
             rows.push(Vector.Zero(4));
         }
+        for (let i = 0; i < rows.length; ++i) {
+            if (rows[i].dimension() < 4) {
+                rows[i] = Vector.Zero(4);
+            } 
+        }
         this.rows = [];
         rows.forEach(function (value: Vector, index: number) {
            this.rows.push(value.dup()); 
@@ -65,5 +70,13 @@ class Matrix {
             ])
         }
         return undefined;
+    }
+
+    public rowDimension(): number {
+        return this.rows.length;
+    }
+
+    public colDimension(): number {
+        return this.rows[0].dimension();
     }
 }

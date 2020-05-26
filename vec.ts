@@ -17,6 +17,10 @@ class Vector {
         return this;
     }
 
+    public dimension(): number {
+        return this.els.length;
+    }
+
     public dup(): Vector {
         return Vector.Create(this.els);
     }
