@@ -17,6 +17,11 @@ class Vector {
         return this;
     }
 
+    public setElement(x: number, i: number): this {
+        this.els[i] = x;
+        return this;
+    }
+
     public dimension(): number {
         return this.els.length;
     }

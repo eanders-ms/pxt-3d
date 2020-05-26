@@ -72,11 +72,53 @@ class Matrix {
         return undefined;
     }
 
-    public rowDimension(): number {
+    public n(): number {
         return this.rows.length;
     }
 
-    public colDimension(): number {
+    public m(): number {
         return this.rows[0].dimension();
+    }
+
+    public dimensions(): { n: number; m: number } {
+        return {
+            n: this.n(),
+            m: this.m()
+        };
+    }
+
+    public map(fn: (x: number, i: number, j: number) => number): Matrix {
+        const rows: Vector[] = [];
+        for (let row = 0; row < this.rows.length; ++row) {
+            rows.push(this.rows[row].map((x, i) => fn(x, 0, i)));
+        }
+        return Matrix.Create(rows);
+    }
+
+    public add(other: Matrix | number): Matrix {
+        if (typeof other === 'number') {
+            return this.map((x, i, j) => x + other);
+        }
+        return this.map((x, i, j) => x + other.e(i, j));
+    }
+
+    public subtract(other: Matrix | number): Matrix {
+        if (typeof other === 'number') {
+            return this.map((x, i, j) => x - other);
+        }
+        return this.map((x, i, j) => x - other.e(i, j));
+    }
+
+    public multiply(other: Matrix | number): Matrix {
+        if (typeof other === 'number') {
+            return this.map((x, i, j) => x * other);
+        }
+        const rows: Vector[] = [];
+        for (let row = 0; row < this.rows.length; ++row) {
+            const v = rows[row] = Vector.Zero(4);
+            for (let col = 0; col < this.rows[0].dimension(); ++col) {
+                v.setElement()
+            }
+        }
     }
 }
