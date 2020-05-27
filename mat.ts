@@ -1,4 +1,3 @@
-// Add your code here
 
 class Matrix {
     private rows: Vector[];
@@ -7,25 +6,28 @@ class Matrix {
         return new Matrix().setRows(rows);
     }
 
-    public static Identity(): Matrix {
-        return Matrix.Create([
-            Vector.Create([1, 0, 0, 0]),
-            Vector.Create([0, 1, 0, 0]),
-            Vector.Create([0, 0, 1, 0]),
-            Vector.Create([0, 0, 0, 1]),
-        ]);
+    public static Identity(dim = 4): Matrix {
+        dim = dim >= 0 ? dim : 0;
+        const rows: Vector[] = [];
+        for (let i = 0; i < dim; ++i) {
+            const row = Vector.Zero(dim);
+            row.setElement(1, i);
+            rows.push(row);
+        }
+        return Matrix.Create(rows);
     }
 
-    public static Zero(): Matrix {
-        return Matrix.Create([
-            Vector.Zero(4),
-            Vector.Zero(4),
-            Vector.Zero(4),
-            Vector.Zero(4),
-        ]);
+    public static Zero(dim = 4): Matrix {
+        dim = dim >= 0 ? dim : 0;
+        const rows: Vector[] = [];
+        for (let i = 0; i < dim; ++i) {
+            const row = Vector.Zero(dim);
+            rows.push(row);
+        }
+        return Matrix.Create(rows);
     }
 
-    public static CreateFrustumProjection(left: number, right: number, bottom: number, top: number, znear: number, zfar: number): Matrix {
+    public static Frustum(left: number, right: number, bottom: number, top: number, znear: number, zfar: number): Matrix {
         let X = 2 * znear / (right - left);
         let Y = 2 * znear / (top - bottom);
         let A = (right + left) / (right - left);
@@ -41,29 +43,53 @@ class Matrix {
         ]);
     }
 
-    public static CreatePerspectiveProjection(fovy: number, aspect: number, znear: number, zfar: number): Matrix {
-        let ymax = znear * Math.tan(fovy * Math.PI / 360.0);
+    public static Perspective(fovy: number, aspect: number, znear: number, zfar: number): Matrix {
+        let ymax = znear * Math.tan(fovy * Math.PI / 180.0);
         let ymin = -ymax;
         let xmin = ymin * aspect;
         let xmax = ymax * aspect;
+        return Matrix.Frustum(xmin, xmax, ymin, ymax, znear, zfar);
+    }
 
-        return Matrix.CreateFrustumProjection(xmin, xmax, ymin, ymax, znear, zfar);
+    public static Rotation(theta: number, axis: Vector): Matrix {
+        if (axis.dimension() < 3) return undefined;
+        axis = axis.normal();
+        if (!axis) return undefined;
+        theta = theta * Math.PI / 180.0;
+        const x = axis.e(0), y = axis.e(1), z = axis.e(2);
+        const s = Math.sin(theta);
+        const c = Math.cos(theta);
+        const t = 1 - c;
+        // Based on: https://www.gamedev.net/reference/articles/article1199.asp
+        return Matrix.Create([
+            Vector.Create([t * x * x + c, t * x * y - s * z, t * x * z + s * y, 0]),
+            Vector.Create([t * x * y + s * z, t * y * y + c, t * y * z - s * x, 0]),
+            Vector.Create([t * x * z - s * y, t * y * z + s * x, t * z * z + c, 0]),
+            Vector.Create([0, 0, 0, 1]),
+        ]);
+    }
+
+    public static Translation(offset: Vector, dim = 4): Matrix {
+        if (offset.dimension() < 3 && dim !== 4) return undefined;
+        const m = Matrix.Identity(dim);
+        m.row(0).setElement(offset.e(0), dim - 1);
+        m.row(1).setElement(offset.e(1), dim - 1);
+        m.row(2).setElement(offset.e(2), dim - 1);
+        return m;
+    }
+
+    public static Diagonal(v: Vector): Matrix {
+        const dim = v.dimension();
+        const m = Matrix.Zero(dim);
+        for (let i = 0; i < dim; ++i) {
+            m.set(v.e(i), i, i);
+        }
+        return m;
     }
 
     public setRows(rows: Vector[]): this {
-        rows = (rows || []).slice(0, 4);
-        while (rows.length < 4) {
-            rows.push(Vector.Zero(4));
-        }
-        for (let i = 0; i < rows.length; ++i) {
-            if (rows[i].dimension() < 4) {
-                rows[i] = Vector.Zero(4);
-            }
-        }
         this.rows = [];
-        rows.forEach(function (value: Vector, index: number) {
-            this.rows.push(value.dup());
-        });
+        rows.forEach((v) => this.rows.push(v.dup()));
         return this;
     }
 
@@ -72,29 +98,31 @@ class Matrix {
     }
 
     public e(row: number, col: number): number {
-        if (row >= 0 && row < 4) {
+        if (row >= 0 && row < this.rows.length) {
             return this.rows[row].e(col);
         }
         return undefined;
     }
 
+    public set(v: number, row: number, col: number) {
+        if (row >= 0 && row < this.rows.length) {
+            this.rows[row].setElement(v, col);
+        }
+    }
+
     public row(i: number): Vector {
-        if (i >= 0 && i < 4) {
+        if (i >= 0 && i < this.rows.length) {
             return this.rows[i];
         }
         return undefined;
     }
 
     public col(j: number): Vector {
-        if (j >= 0 && j < 4) {
-            return Vector.Create([
-                this.row(0).e(j),
-                this.row(1).e(j),
-                this.row(2).e(j),
-                this.row(3).e(j),
-            ])
+        const els: number[] = [];
+        for (let i = 0; i < this.rows.length; ++i) {
+            els.push(this.rows[i].e(j));
         }
-        return undefined;
+        return Vector.Create(els);
     }
 
     public n(): number {
@@ -144,5 +172,58 @@ class Matrix {
             rows.push(v);
         }
         return Matrix.Create(rows);
+    }
+
+    public isSquare(): boolean {
+        return this.n() === this.m();
+    }
+}
+
+class MatrixStack {
+    private stack: Matrix[] = [];
+    private matrix = Matrix.Identity(4);
+
+    constructor() {
+    }
+
+    public push(m: Matrix) {
+        if (m) {
+            this.stack.push(m.dup());
+            this.matrix = m.dup();
+        } else {
+            this.stack.push(this.matrix.dup());
+        }
+    }
+
+    public pop() {
+        if (this.stack.length === 0) return undefined;
+        this.matrix = this.stack.pop();
+        return this.matrix;
+    }
+
+    public multiply(m: Matrix) {
+        this.matrix = this.matrix.multiply(m);
+    }
+
+    public translate(v: Vector) {
+        const m = Matrix.Translation(v);
+        this.multiply(m);
+    }
+
+    public rotate(theta: number, axis: Vector) {
+        theta = theta * Math.PI / 180.0;
+        const m = Matrix.Rotation(theta, axis);
+        this.multiply(m);
+    }
+
+    public scale(v: Vector) {
+        if (!this.matrix.isSquare()) return;
+        if (v.dimension() !== this.matrix.n()) return;
+        const m = Matrix.Diagonal(v);
+        this.multiply(m);
+    }
+
+    public loadIdentity() {
+        this.matrix = Matrix.Identity(4);
     }
 }

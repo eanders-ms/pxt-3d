@@ -1,3 +1,4 @@
+
 class Vector {
     private els: number[];
 
@@ -5,7 +6,7 @@ class Vector {
         return new Vector().setElements(els);
     }
 
-    public static Zero(n: number): Vector {
+    public static Zero(n = 4): Vector {
         n = n >= 0 ? n : 0;
         const els: number[] = [];
         els.length = n;
@@ -63,10 +64,10 @@ class Vector {
         return this.map((x, i) => x * rhs.els[i]);
     }
 
-    public dot3(rhs: Vector): number {
-        if (this.els.length < 3 || rhs.els.length < 3) return undefined;
+    public dot(rhs: Vector): number {
+        const len = Math.min(this.els.length, rhs.els.length);
         let product = 0;
-        for (let i = 0; i < 3; ++i) {
+        for (let i = 0; i < len; ++i) {
             product += this.els[i] * rhs.els[i];
         }
         return product;
@@ -82,7 +83,7 @@ class Vector {
     }
 
     public lengthSq(): number {
-        return this.dot3(this);
+        return this.dot(this);
     }
 
     public length(): number {
@@ -91,7 +92,7 @@ class Vector {
 
     public normal(): Vector {
         const len = this.length();
-        if (!len) { return undefined; }
+        if (!len) return undefined;
         return this.map((x) => x / len);
     }
 }
