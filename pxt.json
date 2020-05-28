@@ -11,7 +11,15 @@
         "vec.ts",
         "mat.ts",
         "line.ts",
-        "plane.ts"
+        "plane.ts",
+        "renderer.ts",
+        "engine.ts",
+        "actor.ts",
+        "tri.ts",
+        "mesh.ts",
+        "colors.ts",
+        "transform.ts",
+        "quat.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [
