@@ -1,15 +1,16 @@
 
 namespace threed {
     export class Triangle {
-        public a: Vector;
-        public b: Vector;
-        public c: Vector;
-        /*
-        public computeNormal() {
-            const ab = b.add(a.multiply(-1));
-            const ac = c.add(a.multiply(-1));
-            this.normal = ab.cross3(ac);
+        public a: number;
+        public b: number;
+        public c: number;
+        public normal: Vector;
+
+        constructor(a: number, b: number, c: number, normal: Vector) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            this.normal = normal.dup();
         }
-        */
     }
 }

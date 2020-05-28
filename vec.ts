@@ -68,7 +68,9 @@ namespace threed {
             return this.map((x, i) => x - rhs.els[i]);
         }
 
-        public multiply(rhs: Vector): Vector {
+        public multiply(rhs: Vector | number): Vector {
+            if (typeof rhs === 'number')
+                return this.map(((x) => x * rhs));
             return this.map((x, i) => x * rhs.els[i]);
         }
 
