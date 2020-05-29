@@ -21,7 +21,9 @@
         "quat.ts",
         "light.ts",
         "camera.ts",
-        "triangle.ts"
+        "triangle.ts",
+        "vector3.ts",
+        "vector4.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [

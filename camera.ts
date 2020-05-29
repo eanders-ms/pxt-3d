@@ -1,10 +1,12 @@
 
 namespace threed {
     export class Camera {
-        private _position: Vector;
-        private _rotation: Quaternion;
+        public position: Vector3;
+        public rotation: Vector3;
 
-        public get position() { return this._position; }
-        public get rotation() { return this._rotation; }
+        constructor(position: Vector3, rotation: Vector3) {
+            this.position = position;
+            this.rotation = rotation;
+        }
     }
 }
