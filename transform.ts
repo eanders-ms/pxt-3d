@@ -9,10 +9,10 @@ namespace threed {
         public get rotation() { return this._rotation; }
         public get scale() { return this._scale; }
 
-        constructor(position: Vector = null, rotation: Quaternion = null, scale: Vector = null) {
-            this._position = position ? position.dup() : Vector.Zero(3);
-            this._rotation = rotation ? rotation.dup() : Quaternion.Identity();
-            this._scale = scale ? scale.dup() : Vector.One(3);
+        constructor() {
+            this._position = Vector.Zero(3);
+            this._rotation = Quaternion.Identity();
+            this._scale = Vector.One(3);
         }
     }
 }

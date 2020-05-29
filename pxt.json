@@ -19,7 +19,8 @@
         "mesh.ts",
         "colors.ts",
         "transform.ts",
-        "quat.ts"
+        "quat.ts",
+        "light.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [
