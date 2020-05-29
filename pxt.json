@@ -15,13 +15,13 @@
         "renderer.ts",
         "engine.ts",
         "actor.ts",
-        "tri.ts",
         "mesh.ts",
         "colors.ts",
         "transform.ts",
         "quat.ts",
         "light.ts",
-        "camera.ts"
+        "camera.ts",
+        "triangle.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [
