@@ -20,7 +20,8 @@
         "colors.ts",
         "transform.ts",
         "quat.ts",
-        "light.ts"
+        "light.ts",
+        "camera.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [

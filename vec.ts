@@ -3,8 +3,13 @@ namespace threed {
     export class Vector {
         private els: number[];
 
-        public static Create(els: number[]): Vector {
-            return new Vector().setElements(els);
+        constructor(els: number | number[] = null) {
+            if (els !== null)
+                this.setElements(els);
+        }
+
+        public static Create(els: number | number[]): Vector {
+            return new Vector(els);
         }
 
         public static Zero(n = 4): Vector {
@@ -25,8 +30,13 @@ namespace threed {
         public static Y() { return Vector.Create([0, 1, 0]); }
         public static Z() { return Vector.Create([0, 0, 1]); }
 
-        public setElements(els: number[]): this {
-            this.els = (els || []).slice();
+        public setElements(els: number | number[]): this {
+            if (typeof els === 'number') {
+                this.els = [];
+                this.els.length = els;
+            } else {
+                this.els = (els || []).slice();
+            }
             return this;
         }
 
@@ -97,7 +107,7 @@ namespace threed {
         }
 
         public length(): number {
-            return Math.sqrt(this.length());
+            return Math.sqrt(this.lengthSq());
         }
 
         public normal(): Vector {

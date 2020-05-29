@@ -1,5 +1,7 @@
 namespace threed {
     export class Actor {
+        public id: number;
+        
         private _transform: Transform;
         private _mesh: Mesh;
 

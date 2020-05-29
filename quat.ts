@@ -1,6 +1,11 @@
 
 namespace threed {
-    export class Quaternion {
+    export class Quaternion extends Vector {
+
+        constructor() {
+            super(4);
+        }
+        
         public static Identity(): Quaternion {
             return null;
         }
