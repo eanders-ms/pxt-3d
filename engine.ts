@@ -2,23 +2,22 @@
 namespace threed {
     export class Engine {
         private _sequence = 0;
-        private _actors: { [id: number]: Actor };
+        private _models: {[name: string]: Model };
+        private _instances: { [id: number]: Instance };
         private _camera: Camera;
         private _light: Light;
-        private _screen: Image;
         private _renderer: Renderer;
 
-        public get actors() { return this._actors; }
+        public get models() { return this._models; }
+        public get instances() { return this._instances; }
         public get camera() { return this._camera; }
         public get light() { return this._light; }
-        public get screen() { return this._screen; }
 
         constructor() {
-            this._actors = {};
-            this._camera = new Camera();
-            this._light = new Light();
-            this._screen = image.create(160, 120);
-            scene.setBackgroundImage(this._screen);
+            this._models = [];
+            this._instances = {};
+            this._camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+            this._light = new Light(new Vector3(0, 1, 0));
             this._renderer = new Renderer(this);
 
             image.setPalette(Colors.Palette);
@@ -35,6 +34,7 @@ namespace threed {
             this._renderer.render();
         }
 
+/*
         public add(actor: Actor) {
             this.remove(actor);
             let id = ++this._sequence;
@@ -49,5 +49,7 @@ namespace threed {
             else
                 delete this._actors[actor.id];
         }
+
+        */
     }
 }

@@ -9,6 +9,8 @@ namespace threed {
         }
 
         public render() {
+            this.depth = [];
+            this.depth.length = this.image.width * this.image.height;
             this.image.fill(Colors.White);
         }
     }
