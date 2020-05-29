@@ -6,7 +6,7 @@ namespace threed {
         public z: number;
         public w: number;
 
-        constructor(arg1: number | Vector3 | Vector4, y: number, z: number, w: number) {
+        constructor(arg1: Vector3 | Vector4 | number, y: number, z: number, w: number) {
             if (arg1 instanceof Vector3) {
                 this.x = arg1.x;
                 this.y = arg1.y;

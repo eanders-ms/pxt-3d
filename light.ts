@@ -1,15 +1,10 @@
 
 namespace threed {
     export class Light {
-        private _direction: Vector;
+        public  direction: Vector3;
 
-        public get direction() { return this._direction; }
-        public set direction(v) {
-            this._direction = v.normal();
-        }
-        
-        constructor() {
-            this.direction = Vector.Y();
+        constructor(direction: Vector3) {
+            this.direction = direction;
         }
     }
 }
