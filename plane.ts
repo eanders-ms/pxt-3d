@@ -1,22 +1,12 @@
 
 namespace threed {
     export class Plane {
-        offset: Vector;
-        normal: Vector;
+        public normal: Vector3;
+        public distance: Vector3;
 
-        public static Create(offset: Vector, normal: Vector): Plane {
-            return new Plane().setVectors(offset, normal);
+        constuctor(normal: Vector3, distance: Vector3) {
+            this.normal = normal;
+            this.distance = distance;
         }
-
-        public setVectors(offset: Vector, normal: Vector): this {
-            this.normal = normal.normal();
-            if (!this.normal) return undefined;
-            this.offset = offset.dup();
-            return this;
-        }
-
-        public static XY() { return Plane.Create(Vector.Zero(3), Vector.Z()); }
-        public static YZ() { return Plane.Create(Vector.Zero(3), Vector.X()); }
-        public static ZX() { return Plane.Create(Vector.Zero(3), Vector.Y()); }
     }
 }

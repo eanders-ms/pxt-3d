@@ -11,7 +11,6 @@
         "plane.ts",
         "renderer.ts",
         "engine.ts",
-        "actor.ts",
         "colors.ts",
         "light.ts",
         "camera.ts",
