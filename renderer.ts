@@ -138,10 +138,10 @@ namespace threed {
             }
 
             // Draw horizontal segments.
-            for (let y = p0.y; y <= p2.y; y++) {
+            for (let y = p0.y; y < p2.y; y++) {
                 const [xl, xr] = [x_left[y - p0.y] | 0, x_right[y - p0.y] | 0];
 
-                for (let x = xl; x <= xr; x++) {
+                for (let x = xl; x < xr; x++) {
                     if (!this.depthChecksEnabled) {
                         this.putPixel(x, y, color);
                     } else {
