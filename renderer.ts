@@ -1,8 +1,12 @@
-const backfaceCulling = true;
-const depthChecksEnabled = true;
-const overWire = false;
 
 namespace threed {
+    export const LightModel = {
+        None: 0,
+        Flat: 1,
+        Gouraud: 2,
+        Phong: 3,
+    };
+    
     export class Renderer {
         static ViewportSize = 1;
         static ProjectionPlaneZ = 1;
@@ -10,13 +14,20 @@ namespace threed {
         private image: Image;
         private depth: number[];
 
+        public backfaceCulling = true;
+        public depthChecksEnabled = true;
+        public overWire = false;
+        public lightModel = LightModel.Flat;
+
         constructor(private engine: Engine) {
             this.image = scene.backgroundImage();
         }
 
         public render() {
-            this.depth = [];
-            this.depth.length = this.image.width * this.image.height;
+            if (this.depthChecksEnabled) {
+                this.depth = [];
+                this.depth.length = this.image.width * this.image.height;
+            }
             this.image.fill(Colors.Black);
             this.renderScene();
         }
@@ -33,7 +44,8 @@ namespace threed {
         }
 
         private transformAndClip(instance: Instance) {
-            const center = Matrix4x4.MultiplyVector4(instance.transform, new Vector4(instance.model.center));
+            const transform = Matrix4x4.Multiply(this.engine.camera.transform, instance.transform);
+            const center = Matrix4x4.MultiplyVector4(transform, new Vector4(instance.model.center));
             const radius2 = instance.model.radius * instance.model.radius;
             for (const plane of this.engine.camera.clippingPlanes) {
                 const distance2 = Vector3.Dot(plane.normal, center) + plane.direction;
@@ -44,7 +56,7 @@ namespace threed {
 
             const vertices = [];
             for (const vertex of instance.model.vertices) {
-                vertices.push(Matrix4x4.MultiplyVector4(instance.transform, new Vector4(vertex)));
+                vertices.push(Matrix4x4.MultiplyVector4(transform, new Vector4(vertex)));
             }
 
             let triangles = instance.model.triangles.slice();
@@ -82,7 +94,7 @@ namespace threed {
             const normal = computeTriangleNormal(vertices[ti[0]], vertices[ti[1]], vertices[ti[2]]);
 
             // Backface culling.
-            if (backfaceCulling) {
+            if (this.backfaceCulling) {
                 const center = Vector3.Multiply(-1.0 / 3.0, Vector3.Add(Vector3.Add(vertices[ti[0]], vertices[ti[1]]), vertices[ti[2]]));
                 if (Vector3.Dot(center, normal) < 0) {
                     return;
@@ -127,13 +139,13 @@ namespace threed {
                 const zscan = interpolate(xl, zl, xr, zr);
 
                 for (let x = xl; x <= xr; x++) {
-                    if (!depthChecksEnabled ||
+                    if (!this.depthChecksEnabled ||
                         this.writeDepth(x, y, zscan[x - xl])) {
                         this.putPixel(x, y, color);
                     }
                 }
             }
-            if (overWire) {
+            if (this.overWire) {
                 this.drawLine(p0, p1, Colors.Black);
                 this.drawLine(p0, p2, Colors.Black);
                 this.drawLine(p2, p1, Colors.Black);

@@ -23,6 +23,9 @@ namespace threed {
         }
 
         public updateTransform() {
+            this.rotation.x = this.rotation.x % 360;
+            this.rotation.y = this.rotation.y % 360;
+            this.rotation.z = this.rotation.z % 360;
             this.transposedOrientation = Matrix4x4.Transposed(Matrix4x4.RotationMatrixFromEulerAngles(this.rotation));
             this.transform = Matrix4x4.Multiply(
                 this.transposedOrientation,
