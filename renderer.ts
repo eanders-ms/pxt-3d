@@ -38,7 +38,7 @@ namespace threed {
                 instance.updateTransform();
                 const clipped = this.transformAndClip(instance);
                 if (clipped) {
-                    this.renderModel(clipped);
+                    this.renderModel(instance.color, clipped);
                 }
             }
         }
@@ -70,17 +70,17 @@ namespace threed {
             return new Model(vertices, triangles, center, instance.model.radius);
         }
 
-        private renderModel(model: Model) {
+        private renderModel(color: number, model: Model) {
             const projected: Point[] = [];
             for (const vertex of model.vertices) {
                 projected.push(this.projectVertex(new Vector4(vertex)));
             }
             for (const triangle of model.triangles) {
-                this.renderTriangle(triangle, model.vertices, projected);
+                this.renderTriangle(color, triangle, model.vertices, projected);
             }
         }
 
-        private renderTriangle(triangle: Triangle, vertices: Vector3[], projected: Point[]) {
+        private renderTriangle(color: number, triangle: Triangle, vertices: Vector3[], projected: Point[]) {
             // Sort by projected point Y.
             const ti = triangle.indices;
             const sorted = sortedVertexIndices(ti, projected);
@@ -123,7 +123,6 @@ namespace threed {
                 [iz_left, iz_right] = [iz012, iz02];
             }
 
-            let color = triangle.color;
             const rotatedLight = Matrix4x4.MultiplyVector4(this.engine.camera.transposedOrientation, new Vector4(this.engine.light.direction));
             const cosLightAngle = Vector3.Dot(rotatedLight, normal);
 
@@ -241,7 +240,7 @@ namespace threed {
     }
 
     function interpolate(i0: number, d0: number, i1: number, d1: number): number[] {
-        if (i0 == i1) {
+        if (i0 === i1) {
             return [d0];
         }
 
@@ -289,14 +288,14 @@ namespace threed {
         const in2 = (Vector3.Dot(plane.normal, v2) + plane.direction) > 0 ? 1 : 0;
 
         const count = in0 + in1 + in2;
-        if (count == 0) {
+        if (count === 0) {
             // Nothing to do - the triangle is fully clipped out.
-        } else if (count == 3) {
+        } else if (count === 3) {
             // The triangle is fully in front of the plane.
             triangles.push(triangle);
-        } else if (count == 1) {
+        } else if (count === 1) {
             // The triangle has one vertex in. Output is one clipped triangle.
-        } else if (count == 2) {
+        } else if (count === 2) {
             // The triangle has two vertices in. Output is two clipped triangles.
         }
     }

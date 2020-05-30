@@ -11,12 +11,10 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     engine.camera.position.z += 1;
 })
 const engine = new threed.Engine();
-const redCubeModel = threed.Model.Cube(threed.Colors.Red);
-const blueCubeModel = threed.Model.Cube(threed.Colors.Blue);
-const greenCubeModel = threed.Model.Cube(threed.Colors.Green);
-const i0 = new threed.Instance(redCubeModel, new threed.Vector3(0, 0, 10), new threed.Vector3(45, 45, 0), 1);
-const i1 = new threed.Instance(blueCubeModel, new threed.Vector3(2.75, 0, 10), new threed.Vector3(0, 0, 0), 1.25);
-const i2 = new threed.Instance(greenCubeModel, new threed.Vector3(-2.75, 0, 10), new threed.Vector3(0, 0, 0), 1.25);
+const cube = threed.Model.Cube();
+const i0 = new threed.Instance(cube, threed.Colors.Red, new threed.Vector3(0, 0, 10), new threed.Vector3(45, 45, 0), 1);
+const i1 = new threed.Instance(cube, threed.Colors.Blue, new threed.Vector3(2.75, 0, 10), new threed.Vector3(0, 0, 0), 1.25);
+const i2 = new threed.Instance(cube, threed.Colors.Green, new threed.Vector3(-2.75, 0, 10), new threed.Vector3(0, 0, 0), 1.25);
 engine.instances.push(i0)
 engine.instances.push(i1)
 engine.instances.push(i2)
