@@ -6,7 +6,7 @@ namespace threed {
         Gouraud: 2,
         Phong: 3,
     };
-    
+
     export class Renderer {
         static ViewportSize = 1;
         static ProjectionPlaneZ = 1;
@@ -82,7 +82,7 @@ namespace threed {
 
         private renderTriangle(triangle: Triangle, vertices: Vector3[], projected: Point[]) {
             // Sort by projected point Y.
-            const ti = [triangle.a, triangle.b, triangle.c];
+            const ti = triangle.indices;
             const sorted = sortedVertexIndices(ti, projected);
             const [i0, i1, i2] = sorted;
 
@@ -95,7 +95,8 @@ namespace threed {
 
             // Backface culling.
             if (this.backfaceCulling) {
-                const center = Vector3.Multiply(-1.0 / 3.0, Vector3.Add(Vector3.Add(vertices[ti[0]], vertices[ti[1]]), vertices[ti[2]]));
+                const center = Vector3.Multiply(-1.0 / 3.0,
+                    Vector3.Add(Vector3.Add(vertices[ti[0]], vertices[ti[1]]), vertices[ti[2]]));
                 if (Vector3.Dot(center, normal) < 0) {
                     return;
                 }
@@ -110,7 +111,6 @@ namespace threed {
             const [x02, x012] = edgeInterpolate(p0.y, p0.x, p1.y, p1.x, p2.y, p2.x);
             const [iz02, iz012] = edgeInterpolate(p0.y, 1.0 / v0.z, p1.y, 1.0 / v1.z, p2.y, 1.0 / v2.z);
 
-
             let x_left, x_right;
             let iz_left, iz_right;
             // Determine which is left and which is right.
@@ -123,25 +123,33 @@ namespace threed {
                 [iz_left, iz_right] = [iz012, iz02];
             }
 
-            const rotatedLight = Matrix4x4.MultiplyVector4(this.engine.camera.transposedOrientation, new Vector4(this.engine.light.direction));
-            const cosAngle = Vector3.Dot(rotatedLight, normal);
             let color = triangle.color;
-            if (cosAngle < 0) {
-                color = Colors.Shaded(color);
+            const rotatedLight = Matrix4x4.MultiplyVector4(this.engine.camera.transposedOrientation, new Vector4(this.engine.light.direction));
+            const cosLightAngle = Vector3.Dot(rotatedLight, normal);
+
+            switch (this.lightModel) {
+                case LightModel.None: break;
+                case LightModel.Flat: {
+                    if (cosLightAngle < 0) {
+                        color = Colors.Shaded(color);
+                    }
+                    break;
+                }
             }
 
             // Draw horizontal segments.
             for (let y = p0.y; y <= p2.y; y++) {
                 const [xl, xr] = [x_left[y - p0.y] | 0, x_right[y - p0.y] | 0];
 
-                // Interpolate attributes for this scanline.
-                const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
-                const zscan = interpolate(xl, zl, xr, zr);
-
                 for (let x = xl; x <= xr; x++) {
-                    if (!this.depthChecksEnabled ||
-                        this.writeDepth(x, y, zscan[x - xl])) {
+                    if (!this.depthChecksEnabled) {
                         this.putPixel(x, y, color);
+                    } else {
+                        const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
+                        const zscan = interpolate(xl, zl, xr, zr);
+                        if (this.writeDepth(x, y, zscan[x - xl])) {
+                            this.putPixel(x, y, color);
+                        }
                     }
                 }
             }
@@ -180,7 +188,8 @@ namespace threed {
         }
 
         private drawLine(p0: Point, p1: Point, color: number) {
-            const dx = p1.x - p0.x, dy = p1.y - p0.y;
+            const dx = p1.x - p0.x;
+            const dy = p1.y - p0.y;
 
             if (Math.abs(dx) > Math.abs(dy)) {
                 // The line is horizontal-ish. Make sure it's left to right.
@@ -271,9 +280,9 @@ namespace threed {
     }
 
     function clipTriangle(triangle: Triangle, plane: Plane, triangles: Triangle[], vertices: Vector3[]) {
-        const v0 = vertices[triangle.a];
-        const v1 = vertices[triangle.b];
-        const v2 = vertices[triangle.c];
+        const v0 = vertices[triangle.indices[0]];
+        const v1 = vertices[triangle.indices[1]];
+        const v2 = vertices[triangle.indices[2]];
 
         const in0 = (Vector3.Dot(plane.normal, v0) + plane.direction) > 0 ? 1 : 0;
         const in1 = (Vector3.Dot(plane.normal, v1) + plane.direction) > 0 ? 1 : 0;

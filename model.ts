@@ -24,18 +24,18 @@ namespace threed {
                 new Vector3(1, -1, -1),
             ];
             const triangles = [
-                new Triangle(0, 1, 2, new Vector3(0, 0, 1), color),
-                new Triangle(0, 2, 3, new Vector3(0, 0, 1), color),
-                new Triangle(4, 0, 3, new Vector3(1, 0, 0), color),
-                new Triangle(4, 3, 7, new Vector3(1, 0, 0), color),
-                new Triangle(5, 4, 7, new Vector3(0, 0, -1), color),
-                new Triangle(5, 7, 6, new Vector3(0, 0, -1), color),
-                new Triangle(1, 5, 6, new Vector3(-1, 0, 0), color),
-                new Triangle(1, 6, 2, new Vector3(-1, 0, 0), color),
-                new Triangle(1, 0, 5, new Vector3(0, 1, 0), color),
-                new Triangle(5, 0, 4, new Vector3(0, 1, 0), color),
-                new Triangle(2, 6, 7, new Vector3(0, -1, 0), color),
-                new Triangle(2, 7, 3, new Vector3(0, -1, 0), color),
+                new Triangle([0, 1, 2], new Vector3(0, 0, 1), color),
+                new Triangle([0, 2, 3], new Vector3(0, 0, 1), color),
+                new Triangle([4, 0, 3], new Vector3(1, 0, 0), color),
+                new Triangle([4, 3, 7], new Vector3(1, 0, 0), color),
+                new Triangle([5, 4, 7], new Vector3(0, 0, -1), color),
+                new Triangle([5, 7, 6], new Vector3(0, 0, -1), color),
+                new Triangle([1, 5, 6], new Vector3(-1, 0, 0), color),
+                new Triangle([1, 6, 2], new Vector3(-1, 0, 0), color),
+                new Triangle([1, 0, 5], new Vector3(0, 1, 0), color),
+                new Triangle([5, 0, 4], new Vector3(0, 1, 0), color),
+                new Triangle([2, 6, 7], new Vector3(0, -1, 0), color),
+                new Triangle([2, 7, 3], new Vector3(0, -1, 0), color),
             ];
 
             return new Model(vertices, triangles, new Vector3(0, 0, 0), Math.sqrt(3));
@@ -60,8 +60,8 @@ namespace threed {
                 for (let i = 0; i < divs - 1; i++) {
                     const i0 = d * divs + i;
                     const center = Vector3.Multiply(-1.0 / 3.0, Vector3.Add(Vector3.Add(vertices[i0], vertices[i0 + divs + 1]), vertices[i0 + 1]));
-                    triangles.push(new Triangle(i0, i0 + divs + 1, i0 + 1, center, color));
-                    triangles.push(new Triangle(i0, i0 + divs, i0 + divs + 1, center, color));
+                    triangles.push(new Triangle([i0, i0 + divs + 1, i0 + 1], center, color));
+                    triangles.push(new Triangle([i0, i0 + divs, i0 + divs + 1], center, color));
                 }
             }
 
