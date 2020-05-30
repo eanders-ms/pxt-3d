@@ -1,5 +1,5 @@
 
-const depthChecksEnabled = true;
+const depthChecksEnabled = false;
 
 namespace threed {
     export class Renderer {
