@@ -16,29 +16,29 @@ namespace threed {
         }
 
         public static RotationMatrixFromEulerAngles(angles: Vector3) {
-            const α = angles.x * Math.PI / 180.0;
-            const β = angles.y * Math.PI / 180.0;
-            const γ = angles.z * Math.PI / 180.0;
+            const A = angles.x * Math.PI / 180.0;
+            const B = angles.y * Math.PI / 180.0;
+            const Y = angles.z * Math.PI / 180.0;
 
-            const sα = Math.sin(α);
-            const cα = Math.cos(α);
-            const sβ = Math.sin(β);
-            const cβ = Math.cos(β);
-            const sγ = Math.sin(γ);
-            const cγ = Math.cos(γ);
+            const sA = Math.sin(A);
+            const cA = Math.cos(A);
+            const sB = Math.sin(B);
+            const cB = Math.cos(B);
+            const sY = Math.sin(Y);
+            const cY = Math.cos(Y);
 
             return new Matrix4x4([
-                [cα * cβ, cα * sβ * sγ - sα * cγ, cα * sβ * cγ + sα * sγ, 0],
-                [sα * cβ, sα * sβ * sγ + cα * cγ, sα * sβ * cγ - cα * sγ, 0],
-                [-sβ, cβ * sγ, cβ * cγ, 0],
+                [cA * cB, cA * sB * sY - sA * cY, cA * sB * cY + sA * sY, 0],
+                [sA * cB, sA * sB * sY + cA * cY, sA * sB * cY - cA * sY, 0],
+                [-sB, cB * sY, cB * cY, 0],
                 [0, 0, 0, 1]
             ]);
         }
 
         public static RotationMatrixFromAxisAngle(axis: Vector3, angle: number) {
-            const θ = angle * Math.PI / 180.0;
-            const s = Math.sin(θ);
-            const c = Math.cos(θ);
+            const O = angle * Math.PI / 180.0;
+            const s = Math.sin(O);
+            const c = Math.cos(O);
             const x = axis.x;
             const y = axis.y;
             const z = axis.z;
