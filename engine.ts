@@ -2,7 +2,7 @@
 namespace threed {
     export class Engine {
         private _sequence = 0;
-        private _models: {[name: string]: Model };
+        private _models: { [name: string]: Model };
         private _instances: { [id: number]: Instance };
         private _camera: Camera;
         private _light: Light;
@@ -14,7 +14,7 @@ namespace threed {
         public get light() { return this._light; }
 
         constructor() {
-            this._models = [];
+            this._models = {};
             this._instances = {};
             this._camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
             this._light = new Light(new Vector3(0, 1, 0));
@@ -34,22 +34,22 @@ namespace threed {
             this._renderer.render();
         }
 
-/*
-        public add(actor: Actor) {
-            this.remove(actor);
-            let id = ++this._sequence;
-            while (!id) id = ++this._sequence;
-            actor.id = id;
-            this._actors[actor.id] = actor;
-        }
-
-        public remove(actor: Actor | number) {
-            if (typeof actor === 'number')
-                delete this._actors[actor];
-            else
-                delete this._actors[actor.id];
-        }
-
-        */
+        /*
+                public add(actor: Actor) {
+                    this.remove(actor);
+                    let id = ++this._sequence;
+                    while (!id) id = ++this._sequence;
+                    actor.id = id;
+                    this._actors[actor.id] = actor;
+                }
+        
+                public remove(actor: Actor | number) {
+                    if (typeof actor === 'number')
+                        delete this._actors[actor];
+                    else
+                        delete this._actors[actor.id];
+                }
+        
+                */
     }
 }
