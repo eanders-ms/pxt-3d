@@ -6,7 +6,7 @@ namespace threed {
         public z: number;
         public w: number;
 
-        constructor(arg1: any, y: number, z: number, w: number) {
+        constructor(arg1: any, y: number = null, z: number = null, w: number = null) {
             if (typeof arg1 === 'number') {
                 this.x = arg1;
                 this.y = y;

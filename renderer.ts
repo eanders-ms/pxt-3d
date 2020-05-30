@@ -30,7 +30,12 @@ namespace threed {
         }
 
         private transformAndClip(instance: Instance) {
+            const center = Matrix4x4.MultiplyVector4(instance.transform, new Vector4(instance.model.center));
             
+        }
+
+        private renderModel(model: Model) {
+
         }
 
         private writeDepth(x: number, y: number, inv_z: number) {
