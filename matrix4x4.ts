@@ -80,7 +80,7 @@ namespace threed {
             return new Vector4(result[0], result[1], result[2], result[3]);
         }
 
-        public static MultiplyMatrix(matA: Matrix4x4, matB: Matrix4x4) {
+        public static Multiply(matA: Matrix4x4, matB: Matrix4x4) {
             const result = new Matrix4x4([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]);
 
             for (let i = 0; i < 4; i++) {
@@ -94,7 +94,7 @@ namespace threed {
             return result;
         }
 
-        public Transposed(mat: Matrix4x4) {
+        public static Transposed(mat: Matrix4x4) {
             const result = new Matrix4x4([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]);
 
             for (let i = 0; i < 4; i++) {

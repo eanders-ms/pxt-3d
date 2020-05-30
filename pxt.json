@@ -19,7 +19,8 @@
         "vector4.ts",
         "instance.ts",
         "model.ts",
-        "matrix4x4.ts"
+        "matrix4x4.ts",
+        "point.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [

@@ -15,9 +15,9 @@ namespace threed {
         }
 
         public updateTransform() {
-            this.transform = Matrix4x4.MultiplyMatrix(
-                Matrix4x4.TranslationMatrix(this.position),
-                Matrix4x4.RotationMatrixFromEulerAngles(this.rotation));
+            this.transform = Matrix4x4.Multiply(
+                Matrix4x4.Transposed(Matrix4x4.RotationMatrixFromEulerAngles(this.rotation)),
+                Matrix4x4.TranslationMatrix(Vector3.Multiply(-1, this.position)));
         }
     }
 }
