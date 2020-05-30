@@ -1,5 +1,6 @@
 
-const depthChecksEnabled = false;
+const depthChecksEnabled = true;
+const overWire = true;
 
 namespace threed {
     export class Renderer {
@@ -124,6 +125,11 @@ namespace threed {
                         this.putPixel(x, y, triangle.color);
                     }
                 }
+            }
+            if (overWire) {
+                this.drawLine(p0, p1, Colors.Black);
+                this.drawLine(p0, p2, Colors.Black);
+                this.drawLine(p2, p1, Colors.Black);
             }
         }
 
