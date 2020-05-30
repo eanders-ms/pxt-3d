@@ -15,6 +15,22 @@ namespace threed {
             this.depth = [];
             this.depth.length = this.image.width * this.image.height;
             this.image.fill(Colors.Black);
+            this.renderScene();
+        }
+
+        private renderScene() {
+            this.engine.camera.updateTransform();
+            for (const instance of this.engine.instances) {
+                instance.updateTransform();
+                const clipped = this.transformAndClip(instance);
+                if (clipped) {
+                    this.renderModel(clipped);
+                }
+            }
+        }
+
+        private transformAndClip(instance: Instance) {
+            
         }
 
         private writeDepth(x: number, y: number, inv_z: number) {

@@ -9,7 +9,14 @@ namespace threed {
         constructor(position: Vector3, rotation: Vector3) {
             this.position = position;
             this.rotation = rotation;
-            this.clippingPlanes = [];
+            const s2 = Math.sqrt(2);
+            this.clippingPlanes = [
+                new Plane(new Vector3(0, 0, 1), -1), // Near
+                new Plane(new Vector3(s2, 0, s2), 0), // Left
+                new Plane(new Vector3(-s2, 0, s2), 0), // Right
+                new Plane(new Vector3(0, -s2, s2), 0), // Top
+                new Plane(new Vector3(0, s2, s2), 0), // Bottom
+            ];
 
             this.updateTransform();
         }

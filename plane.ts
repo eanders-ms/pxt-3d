@@ -2,11 +2,11 @@
 namespace threed {
     export class Plane {
         public normal: Vector3;
-        public distance: Vector3;
+        public direction: number;
 
-        constuctor(normal: Vector3, distance: Vector3) {
+        constructor(normal: Vector3, direction: number) {
             this.normal = normal;
-            this.distance = distance;
+            this.direction = direction;
         }
     }
 }
