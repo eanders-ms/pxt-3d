@@ -33,5 +33,11 @@ namespace threed {
         public static Magnitude(vec: Vector3) {
             return Math.sqrt(Vector3.Dot(vec, vec));
         }
+
+        public static Normalized(vec: Vector3) {
+            const mag = Vector3.Magnitude(vec);
+            if (!mag) return vec;
+            return Vector3.Multiply(1 / mag, vec);
+        }
     }
 }

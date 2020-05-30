@@ -1,6 +1,6 @@
 const backfaceCulling = true;
 const depthChecksEnabled = true;
-const overWire = true;
+const overWire = false;
 
 namespace threed {
     export class Renderer {
@@ -129,7 +129,7 @@ namespace threed {
                 for (let x = xl; x <= xr; x++) {
                     if (!depthChecksEnabled ||
                         this.writeDepth(x, y, zscan[x - xl])) {
-                        this.putPixel(x, y, triangle.color);
+                        this.putPixel(x, y, color);
                     }
                 }
             }
