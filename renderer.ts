@@ -81,8 +81,7 @@ namespace threed {
             const normal = computeTriangleNormal(vertices[ti[0]], vertices[ti[1]], vertices[ti[2]]);
 
             // Backface culling.
-            //if (depthChecksEnabled)
-            {
+            if (depthChecksEnabled) {
                 const center = Vector3.Multiply(-1.0 / 3.0, Vector3.Add(Vector3.Add(vertices[ti[0]], vertices[ti[1]]), vertices[ti[2]]));
                 if (Vector3.Dot(center, normal) < 0) {
                     return;
@@ -126,7 +125,6 @@ namespace threed {
                     }
                 }
             }
-
         }
 
         private writeDepth(x: number, y: number, inv_z: number) {
