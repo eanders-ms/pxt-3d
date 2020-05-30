@@ -95,7 +95,7 @@ namespace threed {
 
             // Backface culling.
             if (this.backfaceCulling) {
-                const center = Vector3.Multiply(-1.0 / 3.0,
+                const center = Vector3.Scale(-1.0 / 3.0,
                     Vector3.Add(Vector3.Add(vertices[ti[0]], vertices[ti[1]]), vertices[ti[2]]));
                 if (Vector3.Dot(center, normal) < 0) {
                     return;
@@ -265,8 +265,8 @@ namespace threed {
     }
 
     function computeTriangleNormal(v0: Vector3, v1: Vector3, v2: Vector3) {
-        const v0v1 = Vector3.Add(v1, Vector3.Multiply(-1, v0));
-        const v0v2 = Vector3.Add(v2, Vector3.Multiply(-1, v0));
+        const v0v1 = Vector3.Add(v1, Vector3.Scale(-1, v0));
+        const v0v2 = Vector3.Add(v2, Vector3.Scale(-1, v0));
         return Vector3.Cross(v0v1, v0v2);
     }
 

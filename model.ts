@@ -59,7 +59,7 @@ namespace threed {
             for (let d = 0; d < divs; d++) {
                 for (let i = 0; i < divs - 1; i++) {
                     const i0 = d * divs + i;
-                    const center = Vector3.Multiply(-1.0 / 3.0, Vector3.Add(Vector3.Add(vertices[i0], vertices[i0 + divs + 1]), vertices[i0 + 1]));
+                    const center = Vector3.Scale(-1.0 / 3.0, Vector3.Add(Vector3.Add(vertices[i0], vertices[i0 + divs + 1]), vertices[i0 + 1]));
                     triangles.push(new Triangle([i0, i0 + divs + 1, i0 + 1], center, color));
                     triangles.push(new Triangle([i0, i0 + divs, i0 + divs + 1], center, color));
                 }

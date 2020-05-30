@@ -11,7 +11,7 @@ namespace threed {
             this.z = z;
         }
 
-        public static Multiply(k: number, vec: Vector3) {
+        public static Scale(k: number, vec: Vector3) {
             return new Vector3(k * vec.x, k * vec.y, k * vec.z);
         }
 
@@ -37,7 +37,7 @@ namespace threed {
         public static Normalized(vec: Vector3) {
             const mag = Vector3.Magnitude(vec);
             if (!mag) return vec;
-            return Vector3.Multiply(1 / mag, vec);
+            return Vector3.Scale(1 / mag, vec);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace threed {
             this.transposedOrientation = Matrix4x4.Transposed(Matrix4x4.RotationMatrixFromEulerAngles(this.rotation));
             this.transform = Matrix4x4.Multiply(
                 this.transposedOrientation,
-                Matrix4x4.TranslationMatrix(Vector3.Multiply(-1, this.position)));
+                Matrix4x4.TranslationMatrix(Vector3.Scale(-1, this.position)));
         }
     }
 }
