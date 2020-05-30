@@ -1,4 +1,4 @@
-
+const backfaceCulling = true;
 const depthChecksEnabled = true;
 const overWire = true;
 
@@ -82,7 +82,7 @@ namespace threed {
             const normal = computeTriangleNormal(vertices[ti[0]], vertices[ti[1]], vertices[ti[2]]);
 
             // Backface culling.
-            if (depthChecksEnabled) {
+            if (backfaceCulling) {
                 const center = Vector3.Multiply(-1.0 / 3.0, Vector3.Add(Vector3.Add(vertices[ti[0]], vertices[ti[1]]), vertices[ti[2]]));
                 if (Vector3.Dot(center, normal) < 0) {
                     return;
@@ -109,6 +109,13 @@ namespace threed {
             } else {
                 [x_left, x_right] = [x012, x02];
                 [iz_left, iz_right] = [iz012, iz02];
+            }
+
+            const rotatedLight = Matrix4x4.MultiplyVector4(this.engine.camera.transposedOrientation, new Vector4(this.engine.light.direction));
+            const cosAngle = Vector3.Dot(rotatedLight, normal);
+            let color = triangle.color;
+            if (cosAngle < 0) {
+                color = Colors.Shaded(color);
             }
 
             // Draw horizontal segments.

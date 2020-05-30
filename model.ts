@@ -45,13 +45,13 @@ namespace threed {
             const vertices = [];
             const triangles = [];
 
-            const delta_angle = 2.0 * Math.PI / divs;
+            const deltaAngle = 2.0 * Math.PI / divs;
 
             for (let d = 0; d < divs + 1; d++) {
                 let y = (2.0 / divs) * (d - divs / 2);
                 let radius = Math.sqrt(1.0 - y * y);
                 for (let i = 0; i < divs; i++) {
-                    const vertex = new Vector3(radius * Math.cos(i * delta_angle), y, radius * Math.sin(i * delta_angle));
+                    const vertex = new Vector3(radius * Math.cos(i * deltaAngle), y, radius * Math.sin(i * deltaAngle));
                     vertices.push(vertex);
                 }
             }
@@ -59,17 +59,13 @@ namespace threed {
             for (let d = 0; d < divs; d++) {
                 for (let i = 0; i < divs - 1; i++) {
                     const i0 = d * divs + i;
-                    const normal = new Vector3(
-                        (vertices[i0].x + vertices[i0 + divs + 1].x + vertices[i0 + 1].x) / 3,
-                        (vertices[i0].y + vertices[i0 + divs + 1].y + vertices[i0 + 1].y) / 3,
-                        (vertices[i0].z + vertices[i0 + divs + 1].z + vertices[i0 + 1].z) / 3,
-                    );
-                    triangles.push(new Triangle(i0, i0 + divs + 1, i0 + 1, normal, color));
-                    triangles.push(new Triangle(i0, i0 + divs, i0 + divs + 1, normal, color));
+                    const center = Vector3.Multiply(-1.0 / 3.0, Vector3.Add(Vector3.Add(vertices[i0], vertices[i0 + divs + 1]), vertices[i0 + 1]));
+                    triangles.push(new Triangle(i0, i0 + divs + 1, i0 + 1, center, color));
+                    triangles.push(new Triangle(i0, i0 + divs, i0 + divs + 1, center, color));
                 }
             }
 
-            return new Model(vertices, triangles, new Vector3(0, 0, 0), 1.0);            
+            return new Model(vertices, triangles, new Vector3(0, 0, 0), 1.0);
         }
     }
 }

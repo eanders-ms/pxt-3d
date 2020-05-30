@@ -5,6 +5,7 @@ namespace threed {
         public rotation: Vector3;
         public clippingPlanes: Plane[];
         public transform: Matrix4x4;
+        public transposedOrientation: Matrix4x4;
 
         constructor(position: Vector3, rotation: Vector3) {
             this.position = position;
@@ -22,8 +23,9 @@ namespace threed {
         }
 
         public updateTransform() {
+            this.transposedOrientation = Matrix4x4.Transposed(Matrix4x4.RotationMatrixFromEulerAngles(this.rotation));
             this.transform = Matrix4x4.Multiply(
-                Matrix4x4.Transposed(Matrix4x4.RotationMatrixFromEulerAngles(this.rotation)),
+                this.transposedOrientation,
                 Matrix4x4.TranslationMatrix(Vector3.Multiply(-1, this.position)));
         }
     }
