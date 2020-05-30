@@ -16,7 +16,11 @@ namespace threed {
         }
 
         public updateTransform() {
-            this.transform;
+            this.transform = Matrix4x4.MultiplyMatrix(
+                Matrix4x4.TranslationMatrix(this.position),
+                Matrix4x4.MultiplyMatrix(
+                    Matrix4x4.RotationMatrixFromEulerAngles(this.rotation),
+                    Matrix4x4.ScalingMatrix(this.scale)));
         }
     }
 }
