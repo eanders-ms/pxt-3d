@@ -2,92 +2,27 @@ controller.right.onEvent(ControllerButtonEvent.Repeated, function () {
     engine.camera.rotation.y -= 1;
 })
 controller.down.onEvent(ControllerButtonEvent.Repeated, function () {
-    engine.camera.position.z -= 1;
+    engine.camera.position = threed.Vector3.Subtract(engine.camera.position, threed.Vector3.Scale(1, engine.camera.forward));
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     engine.camera.rotation.y += 1;
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    engine.camera.position.z -= 1;
+    engine.camera.position = threed.Vector3.Subtract(engine.camera.position, threed.Vector3.Scale(1, engine.camera.forward));
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     engine.camera.rotation.y -= 1;
 })
 controller.up.onEvent(ControllerButtonEvent.Repeated, function () {
-    engine.camera.position.z += 1;
+    engine.camera.position = threed.Vector3.Add(engine.camera.position, threed.Vector3.Scale(1, engine.camera.forward));
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    engine.camera.position.z += 1;
+    engine.camera.position = threed.Vector3.Add(engine.camera.position, threed.Vector3.Scale(1, engine.camera.forward));
 })
 controller.left.onEvent(ControllerButtonEvent.Repeated, function () {
     engine.camera.rotation.y += 1;
 })
-let stipple5: Sprite = null
-let stipple4: Sprite = null
-let stipple3: Sprite = null
-let stipple2: Sprite = null
-let stipple1: Sprite = null
-let stipple0: Sprite = null
-stipple0.setImage(img`
-    . . . . . . . .
-    . . . . . . . .
-    . . . . . . . .
-    . . . . . . . .
-    . . . . . . . .
-    . . . . . . . .
-    . . . . . . . .
-    . . . . . . . .
-`)
-stipple1.setImage(img`
-    f f f f f f f f
-    . . . . . . . .
-    . . . . . . . .
-    . . . . . . . .
-    f f f f f f f f
-    . . . . . . . .
-    . . . . . . . .
-    . . . . . . . .
-`)
-stipple2.setImage(img`
-    f f f f f f f f
-    . . . . . . . .
-    f f f f f f f f
-    . . . . . . . .
-    f f f f f f f f
-    . . . . . . . .
-    f f f f f f f f
-    . . . . . . . .
-`)
-stipple3.setImage(img`
-    f f f f f f f f
-    f . . . f . . .
-    f f f f f f f f
-    f . . . f . . .
-    f f f f f f f f
-    f . . . f . . .
-    f f f f f f f f
-    f . . . f . . .
-`)
-stipple4.setImage(img`
-    f f f f f f f f
-    f . f . f . f .
-    f f f f f f f f
-    f . f . f . f .
-    f f f f f f f f
-    f . f . f . f .
-    f f f f f f f f
-    f . f . f . f .
-`)
-stipple5.setImage(img`
-    f f f f f f f f
-    f f f f f f f f
-    f f f f f f f f
-    f f f f f f f f
-    f f f f f f f f
-    f f f f f f f f
-    f f f f f f f f
-    f f f f f f f f
-`)
+controller.setRepeatDefault(0, 10);
 const engine = new threed.Engine();
 const cube = threed.Model.Cube();
 const i0 = new threed.Instance(cube, threed.Colors.Red, new threed.Vector3(0, 0, 10), new threed.Vector3(45, 45, 0), 1);

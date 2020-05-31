@@ -7,6 +7,9 @@ namespace threed {
         public transform: Matrix4x4;
         public transposedOrientation: Matrix4x4;
 
+        private _forward: Vector3;
+        public get forward() { return this._forward; }
+
         constructor(position: Vector3, rotation: Vector3) {
             this.position = position;
             this.rotation = rotation;
@@ -26,10 +29,12 @@ namespace threed {
             this.rotation.x = this.rotation.x % 360;
             this.rotation.y = this.rotation.y % 360;
             this.rotation.z = this.rotation.z % 360;
-            this.transposedOrientation = Matrix4x4.Transposed(Matrix4x4.RotationMatrixFromEulerAngles(this.rotation));
+            const orientation = Matrix4x4.RotationMatrixFromEulerAngles(this.rotation);
+            this.transposedOrientation = Matrix4x4.Transposed(orientation);
             this.transform = Matrix4x4.Multiply(
                 this.transposedOrientation,
                 Matrix4x4.TranslationMatrix(Vector3.Scale(-1, this.position)));
+            this._forward = new Vector3(Matrix4x4.MultiplyVector4(orientation, new Vector4(0, 0, 1)));
         }
     }
 }
