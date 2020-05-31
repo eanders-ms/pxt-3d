@@ -15,6 +15,9 @@ namespace threed {
             this._camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
             this._light = new Light(Vector3.Normalized(new Vector3(1, 1, -1)));
             this._renderer = new Renderer(this);
+            this._renderer.backfaceCulling = true;
+            this._renderer.depthCheckEnabled = true;
+            this._renderer.lightModel = LightModel.Flat;
 
             image.setPalette(Colors.Palette);
         }

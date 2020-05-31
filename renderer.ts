@@ -3,8 +3,6 @@ namespace threed {
     export const LightModel = {
         None: 0,
         Flat: 1,
-        Gouraud: 2,
-        Phong: 3,
     };
 
     export class Renderer {
@@ -15,7 +13,7 @@ namespace threed {
         private depth: number[];
 
         public backfaceCulling = true;
-        public depthChecksEnabled = true;
+        public depthCheckEnabled = true;
         public overWire = false;
         public lightModel = LightModel.Flat;
 
@@ -24,9 +22,10 @@ namespace threed {
         }
 
         public render() {
-            if (this.depthChecksEnabled) {
+            if (this.depthCheckEnabled) {
                 this.depth = [];
-                this.depth.length = this.image.width * this.image.height;
+                // hardware-specific compiler doesn't like this line
+                //this.depth.length = this.image.width * this.image.height;
             }
             this.image.fill(Colors.Black);
             this.renderScene();
@@ -138,10 +137,11 @@ namespace threed {
 
             // Draw horizontal segments.
             for (let y = p0.y; y < p2.y; y++) {
-                const [xl, xr] = [x_left[y - p0.y] | 0, x_right[y - p0.y] | 0];
+                const xl = x_left[y - p0.y] | 0;
+                const xr = x_right[y - p0.y] | 0;
 
                 for (let x = xl; x < xr; x++) {
-                    if (!this.depthChecksEnabled) {
+                    if (!this.depthCheckEnabled) {
                         this.putPixel(x, y, color);
                     } else {
                         const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
