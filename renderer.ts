@@ -4,15 +4,29 @@ namespace threed {
         None: 0,
         Flat: 1,
         Dither: 2,
-    };
+        Count: 3
+    }
 
-    export class Renderer {
-        static ViewportSize = 1;
-        static ProjectionPlaneZ = 1;
+    const ViewportSize = 1;
+    const ProjectionPlaneZ = 1;
+    const Dither = img`
+        1 1 1 1 . 1 1 1 . 1 1 1 . 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . 1 . . . 1 . . . 1 . . . .
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 . 1 1 1 . 1 1 1 . 1 1 1 . 1 . . . 1 . . . 1 . . . 1 . . . . . . . . . . . . . . . . . . . . .
+        1 1 1 1 1 1 1 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . . . . . . . .
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . 1 . . . . . . . . . . . . . . . . . . . . . . . . .
+    `;
 
+    export interface IRenderer {
+        backfaceCulling: boolean;
+        depthCheckEnabled: boolean;
+        overWire: boolean;
+        lightModel: number;
+        render(): void;
+    }
+
+    export class Renderer0 implements IRenderer {
         private image: Image;
         private depth: number[];
-        private dither: Image;
 
         public backfaceCulling = true;
         public depthCheckEnabled = true;
@@ -21,12 +35,6 @@ namespace threed {
 
         constructor(private engine: Engine) {
             this.image = scene.backgroundImage();
-            this.dither = img`
-                1 1 1 1 . 1 1 1 . 1 1 1 . 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . 1 . . . 1 . . . 1 . . . .
-                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 . 1 1 1 . 1 1 1 . 1 1 1 . 1 . . . 1 . . . 1 . . . 1 . . . . . . . . . . . . . . . . . . . . .
-                1 1 1 1 1 1 1 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . . . . . . . .
-                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . 1 . . . . . . . . . . . . . . . . . . . . . . . . .
-            `;
         }
 
         public render() {
@@ -133,16 +141,9 @@ namespace threed {
             const rotatedLight = Matrix4x4.MultiplyVector4(this.engine.camera.transposedOrientation, new Vector4(this.engine.light.direction))
             const cosLightAngle = Vector3.Dot(rotatedLight, normal);
 
-            switch (this.lightModel) {
-                case LightModel.None: break;
-                case LightModel.Flat: {
-                    if (cosLightAngle < 0) {
-                        color = Colors.Shaded(color);
-                    }
-                    break;
-                }
-                case LightModel.Dither: {
-                    break;
+            if (this.lightModel === LightModel.Flat) {
+                if (cosLightAngle < 0) {
+                    color = Colors.Shaded(color);
                 }
             }
 
@@ -168,7 +169,7 @@ namespace threed {
                                 let screenx = this.image.width / 2 + (x | 0);
                                 let ditherX = ditherOffset + (screenx % 4);
                                 let ditherY = screeny % 4;
-                                let ditherPixel = this.dither.getPixel(ditherX, ditherY);
+                                let ditherPixel = Dither.getPixel(ditherX, ditherY);
                                 shaded = ditherPixel ? 1 : 0;
                             }
                             this.putPixel(x, y, color + shaded);
@@ -247,22 +248,22 @@ namespace threed {
 
         private viewportToImage(p2d: Point) {
             return new Point(
-                (p2d.x * this.image.width / Renderer.ViewportSize) | 0,
-                (p2d.y * this.image.height / Renderer.ViewportSize) | 0,
+                (p2d.x * this.image.width / ViewportSize) | 0,
+                (p2d.y * this.image.height / ViewportSize) | 0,
                 undefined);
         }
 
         private imageToViewport(p2d: Point) {
             return new Point(
-                (p2d.x * Renderer.ViewportSize / this.image.width),
-                (p2d.y * Renderer.ViewportSize / this.image.height),
+                (p2d.x * ViewportSize / this.image.width),
+                (p2d.y * ViewportSize / this.image.height),
                 undefined);
         }
 
         private projectVertex(v: Vector3) {
             return this.viewportToImage(new Point(
-                v.x * Renderer.ProjectionPlaneZ / v.z,
-                v.y * Renderer.ProjectionPlaneZ / v.z,
+                v.x * ProjectionPlaneZ / v.z,
+                v.y * ProjectionPlaneZ / v.z,
                 undefined));
         }
     }
@@ -275,7 +276,7 @@ namespace threed {
         const values = [];
         const a = (d1 - d0) / (i1 - i0);
         let d = d0;
-        for (let i = i0; i <= i1; i++) {
+        for (let i = i0; i <= i1; ++i) {
             values.push(d);
             d += a;
         }
