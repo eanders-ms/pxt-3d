@@ -3,6 +3,7 @@ namespace threed {
     export const LightModel = {
         None: 0,
         Flat: 1,
+        Dither: 2,
     };
 
     export class Renderer {
@@ -11,6 +12,7 @@ namespace threed {
 
         private image: Image;
         private depth: number[];
+        private dither: Image;
 
         public backfaceCulling = true;
         public depthCheckEnabled = true;
@@ -19,6 +21,12 @@ namespace threed {
 
         constructor(private engine: Engine) {
             this.image = scene.backgroundImage();
+            this.dither = img`
+                1 1 1 1 . 1 1 1 . 1 1 1 . 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . 1 . . . 1 . . . 1 . . . .
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 . 1 1 1 . 1 1 1 . 1 1 1 . 1 . . . 1 . . . 1 . . . 1 . . . . . . . . . . . . . . . . . . . . .
+                1 1 1 1 1 1 1 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . . . . . . . .
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . 1 . . . . . . . . . . . . . . . . . . . . . . . . .
+            `;
         }
 
         public render() {
@@ -122,7 +130,7 @@ namespace threed {
                 [iz_left, iz_right] = [iz012, iz02];
             }
 
-            const rotatedLight = Matrix4x4.MultiplyVector4(this.engine.camera.transposedOrientation, new Vector4(this.engine.light.direction));
+            const rotatedLight = Matrix4x4.MultiplyVector4(this.engine.camera.transposedOrientation, new Vector4(this.engine.light.direction))
             const cosLightAngle = Vector3.Dot(rotatedLight, normal);
 
             switch (this.lightModel) {
@@ -133,6 +141,9 @@ namespace threed {
                     }
                     break;
                 }
+                case LightModel.Dither: {
+                    break;
+                }
             }
 
             // Draw horizontal segments.
@@ -140,13 +151,28 @@ namespace threed {
                 const xl = x_left[y - p0.y] | 0;
                 const xr = x_right[y - p0.y] | 0;
 
+                const screeny = this.image.height / 2 - (y | 0) - 1;
+
                 for (let x = xl; x < xr; x++) {
-                    if (!this.depthCheckEnabled) {
-                        this.putPixel(x, y, color);
-                    } else {
-                        const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
-                        const zscan = interpolate(xl, zl, xr, zr);
-                        if (this.writeDepth(x, y, zscan[x - xl])) {
+                    const screenx = this.image.width / 2 + (x | 0);
+                    const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
+                    const zscan = interpolate(xl, zl, xr, zr);
+                    if (this.writeDepth(x, y, zscan[x - xl])) {
+                        if (this.lightModel === LightModel.Dither) {
+                            let shaded = 0;
+                            if (cosLightAngle < 0) {
+                                shaded = 1;
+                            } else {
+                                let lightRamp = cosLightAngle;
+                                const ditherOffset = Math.floor(lightRamp * 17) * 4;
+                                let screenx = this.image.width / 2 + (x | 0);
+                                let ditherX = ditherOffset + (screenx % 4);
+                                let ditherY = screeny % 4;
+                                let ditherPixel = this.dither.getPixel(ditherX, ditherY);
+                                shaded = ditherPixel ? 1 : 0;
+                            }
+                            this.putPixel(x, y, color + shaded);
+                        } else {
                             this.putPixel(x, y, color);
                         }
                     }
@@ -160,6 +186,8 @@ namespace threed {
         }
 
         private writeDepth(x: number, y: number, inv_z: number) {
+            if (!this.depthCheckEnabled) return true;
+
             x = this.image.width / 2 + (x | 0);
             y = this.image.height / 2 - (y | 0) - 1;
 
@@ -266,7 +294,7 @@ namespace threed {
     function computeTriangleNormal(v0: Vector3, v1: Vector3, v2: Vector3) {
         const v0v1 = Vector3.Add(v1, Vector3.Scale(-1, v0));
         const v0v2 = Vector3.Add(v2, Vector3.Scale(-1, v0));
-        return Vector3.Cross(v0v1, v0v2);
+        return Vector3.Normalized(Vector3.Cross(v0v1, v0v2));
     }
 
     function edgeInterpolate(y0: number, v0: number, y1: number, v1: number, y2: number, v2: number): number[][] {
