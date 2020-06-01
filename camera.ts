@@ -13,28 +13,29 @@ namespace threed {
         constructor(position: Vector3, rotation: Vector3) {
             this.position = position;
             this.rotation = rotation;
-            const s2 = Math.sqrt(2);
+            const s2 = Fx(Math.SQRT2);
+            const ns2 = Fx(-Math.SQRT2);
             this.clippingPlanes = [
-                new Plane(new Vector3(0, 0, 1), -1), // Near
-                new Plane(new Vector3(s2, 0, s2), 0), // Left
-                new Plane(new Vector3(-s2, 0, s2), 0), // Right
-                new Plane(new Vector3(0, -s2, s2), 0), // Top
-                new Plane(new Vector3(0, s2, s2), 0), // Bottom
+                new Plane(new Vector3(Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8), Fx(-1)), // Near
+                new Plane(new Vector3(s2, Fx.zeroFx8, s2), Fx.zeroFx8), // Left
+                new Plane(new Vector3(ns2, Fx.zeroFx8, s2), Fx.zeroFx8), // Right
+                new Plane(new Vector3(Fx.zeroFx8, ns2, s2), Fx.zeroFx8), // Top
+                new Plane(new Vector3(Fx.zeroFx8, s2, s2), Fx.zeroFx8), // Bottom
             ];
 
             this.updateTransform();
         }
 
         public updateTransform() {
-            this.rotation.x = this.rotation.x % 360;
-            this.rotation.y = this.rotation.y % 360;
-            this.rotation.z = this.rotation.z % 360;
+            //this.rotation.x = this.rotation.x % 360;
+            //this.rotation.y = this.rotation.y % 360;
+            //this.rotation.z = this.rotation.z % 360;
             const orientation = Matrix4x4.RotationMatrixFromEulerAngles(this.rotation);
             this.transposedOrientation = Matrix4x4.Transposed(orientation);
             this.transform = Matrix4x4.Multiply(
                 this.transposedOrientation,
-                Matrix4x4.TranslationMatrix(Vector3.Scale(-1, this.position)));
-            this._forward = Matrix4x4.MultiplyVector4(orientation, new Vector4(0, 0, 1, 1)).toVector3();
+                Matrix4x4.TranslationMatrix(Vector3.Scale(Fx(-1), this.position)));
+            this._forward = Matrix4x4.MultiplyVector4(orientation, new Vector4(Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8, Fx.oneFx8)).toVector3();
         }
     }
 }

@@ -18,9 +18,9 @@ namespace threed {
         }
 
         public updateTransform() {
-            this.rotation.x = this.rotation.x % 360;
-            this.rotation.y = this.rotation.y % 360;
-            this.rotation.z = this.rotation.z % 360;
+            //this.rotation.x = this.rotation.x % 360;
+            //this.rotation.y = this.rotation.y % 360;
+            //this.rotation.z = this.rotation.z % 360;
             this.transform = Matrix4x4.Multiply(
                 Matrix4x4.TranslationMatrix(this.position),
                 Matrix4x4.Multiply(

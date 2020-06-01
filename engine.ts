@@ -13,8 +13,8 @@ namespace threed {
 
         constructor() {
             this._instances = [];
-            this._camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
-            this._light = new Light(Vector3.Normalized(new Vector3(1, 1, -1)));
+            this._camera = new Camera(Vector3.Zero(), Vector3.Zero());
+            this._light = new Light(Vector3.Normalized(new Vector3(Fx.oneFx8, Fx.oneFx8, Fx(-1))));
             this._renderer = new Renderer0(this);
             this._renderer.backfaceCulling = true;
             this._renderer.depthCheckEnabled = false;

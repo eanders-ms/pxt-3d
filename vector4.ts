@@ -1,12 +1,12 @@
 
 namespace threed {
     export class Vector4 {
-        public x: number;
-        public y: number;
-        public z: number;
-        public w: number;
+        public x: Fx8;
+        public y: Fx8;
+        public z: Fx8;
+        public w: Fx8;
 
-        constructor(x: number, y: number, z: number, w: number) {
+        constructor(x: Fx8, y: Fx8, z: Fx8, w: Fx8) {
             this.x = x;
             this.y = y;
             this.z = z;

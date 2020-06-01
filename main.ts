@@ -32,7 +32,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.setRepeatDefault(0, 10);
 const engine = new threed.Engine();
 const cube = threed.Model.Cube();
-const redCube = new threed.Instance(cube, threed.Colors.Red, new threed.Vector3(0, 0, 10), new threed.Vector3(0, 0, 0), 1);
+const redCube = new threed.Instance(cube, threed.Colors.Red, new threed.Vector3(0, 0, 8), new threed.Vector3(0, 0, 0), 1);
 const blueCube = new threed.Instance(cube, threed.Colors.Blue, new threed.Vector3(2.75, 0, 10), new threed.Vector3(0, 0, 0), 1.25);
 const greenCube = new threed.Instance(cube, threed.Colors.Green, new threed.Vector3(-2.75, 0, 10), new threed.Vector3(0, 0, 0), 1.25);
 engine.instances.push(redCube)

@@ -61,11 +61,11 @@ namespace threed {
         private transformAndClip(instance: Instance) {
             const transform = Matrix4x4.Multiply(this.engine.camera.transform, instance.transform);
             const center = Matrix4x4.MultiplyVector4(transform, instance.model.center.toVector4()).toVector3();
-            const radius2 = instance.model.radius * instance.model.radius;
+            const radius2 = Fx.mul(instance.model.radius, instance.model.radius);
 
             for (const plane of this.engine.camera.clippingPlanes) {
-                const distance2 = Vector3.Dot(plane.normal, center) + plane.direction;
-                if (distance2 < -radius2) {
+                const distance2 = Fx.add(Vector3.Dot(plane.normal, center), plane.direction);
+                if (distance2 < Fx.mul(Fx(-1), radius2)) {
                     return null;
                 }
             }
@@ -111,9 +111,9 @@ namespace threed {
 
             // Backface culling.
             if (this.backfaceCulling) {
-                const center = Vector3.Scale(-1.0 / 3.0,
+                const center = Vector3.Scale(Fx(-1.0 / 3.0),
                     Vector3.Add(Vector3.Add(vertices[ti[0]], vertices[ti[1]]), vertices[ti[2]]));
-                if (Vector3.Dot(center, normal) < 0) {
+                if (Vector3.Dot(center, normal) < Fx.zeroFx8) {
                     return;
                 }
             }
@@ -125,7 +125,7 @@ namespace threed {
 
             // Compute attribute values at the edges.
             const [x02, x012] = edgeInterpolate(p0.y, p0.x, p1.y, p1.x, p2.y, p2.x);
-            const [iz02, iz012] = edgeInterpolate(p0.y, 1.0 / v0.z, p1.y, 1.0 / v1.z, p2.y, 1.0 / v2.z);
+            const [iz02, iz012] = edgeInterpolate(p0.y, Fx.div(Fx.oneFx8, v0.z), p1.y, Fx.div(Fx.oneFx8, v1.z), p2.y, Fx.div(Fx.oneFx8, v2.z));
 
             let x_left, x_right;
             let iz_left, iz_right;
@@ -143,19 +143,19 @@ namespace threed {
             const cosLightAngle = Vector3.Dot(rotatedLight, normal);
 
             if (this.lightModel === LightModel.Flat) {
-                if (cosLightAngle < 0) {
+                if (cosLightAngle < Fx.zeroFx8) {
                     color = Colors.Shaded(color);
                 }
             }
 
             // Draw horizontal segments.
-            for (let y = p0.y; y < p2.y; y++) {
-                const xl = x_left[y - p0.y] | 0;
-                const xr = x_right[y - p0.y] | 0;
+            for (let y = p0.y; y < p2.y; y = Fx.add(y, Fx.oneFx8)) {
+                const xl = x_left[y - p0.y] | Fx.zeroFx8;
+                const xr = x_right[Fx.sub(y, p0.y)] | Fx.zeroFx8;
 
                 const screeny = this.image.height / 2 - (y | 0) - 1;
 
-                for (let x = xl; x < xr; x++) {
+                for (let x = xl; x < xr; Fx.add(x, Fx.oneFx8)) {
                     const screenx = this.image.width / 2 + (x | 0);
                     const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
                     const zscan = interpolate(xl, zl, xr, zr);
@@ -269,13 +269,13 @@ namespace threed {
         }
     }
 
-    function interpolate(i0: number, d0: number, i1: number, d1: number): number[] {
+    function interpolate(i0: Fx8, d0: Fx8, i1: Fx8, d1: Fx8): Fx8[] {
         if (i0 === i1) {
             return [d0];
         }
 
         const values = [];
-        const a = (d1 - d0) / (i1 - i0);
+        const a = Fx.div(Fx.sub(d1, d0), Fx.sub(i1, i0));
         let d = d0;
         for (let i = i0; i <= i1; ++i) {
             values.push(d);
@@ -299,10 +299,10 @@ namespace threed {
         return Vector3.Normalized(Vector3.Cross(v0v1, v0v2));
     }
 
-    function edgeInterpolate(y0: number, v0: number, y1: number, v1: number, y2: number, v2: number): number[][] {
-        const v01: number[] = interpolate(y0, v0, y1, v1);
-        const v12: number[] = interpolate(y1, v1, y2, v2);
-        const v02: number[] = interpolate(y0, v0, y2, v2);
+    function edgeInterpolate(y0: Fx8, v0: Fx8, y1: Fx8, v1: Fx8, y2: Fx8, v2: Fx8): Fx8[][] {
+        const v01: Fx8[] = interpolate(y0, v0, y1, v1);
+        const v12: Fx8[] = interpolate(y1, v1, y2, v2);
+        const v02: Fx8[] = interpolate(y0, v0, y2, v2);
         v01.pop();
         const v012 = v01.concat(v12);
         return [v02, v012];
