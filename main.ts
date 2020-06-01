@@ -36,8 +36,8 @@ const redCube = new threed.Instance(cube, threed.Colors.Red, new threed.Vector3(
 const blueCube = new threed.Instance(cube, threed.Colors.Blue, new threed.Vector3(2.75, 0, 10), new threed.Vector3(0, 0, 0), 1.25);
 const greenCube = new threed.Instance(cube, threed.Colors.Green, new threed.Vector3(-2.75, 0, 10), new threed.Vector3(0, 0, 0), 1.25);
 engine.instances.push(redCube)
-engine.instances.push(blueCube)
-engine.instances.push(greenCube)
+//engine.instances.push(blueCube)
+//engine.instances.push(greenCube)
 game.onUpdateInterval(10, function () {
     engine.draw();
 redCube.rotation.x += 1.76;

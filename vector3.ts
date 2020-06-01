@@ -5,16 +5,14 @@ namespace threed {
         public y: number;
         public z: number;
 
-        constructor(arg1: any, y: number = null, z: number = null) {
-            if (typeof arg1 === 'number') {
-                this.x = arg1;
-                this.y = y;
-                this.z = z;
-            } else {
-                this.x = arg1.x;
-                this.y = arg1.y;
-                this.z = arg1.z;
-            }
+        constructor(x: number, y: number, z: number) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public toVector4() {
+            return new Vector4(this.x, this.y, this.z, 1);
         }
 
         public static Scale(k: number, vec: Vector3) {

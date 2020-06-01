@@ -17,7 +17,7 @@ namespace threed {
             this._light = new Light(Vector3.Normalized(new Vector3(1, 1, -1)));
             this._renderer = new Renderer0(this);
             this._renderer.backfaceCulling = true;
-            this._renderer.depthCheckEnabled = true;
+            this._renderer.depthCheckEnabled = false;
             this._renderer.overWire = false;
             this._renderer.lightModel = LightModel.Dither;
 

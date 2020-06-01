@@ -34,7 +34,7 @@ namespace threed {
             this.transform = Matrix4x4.Multiply(
                 this.transposedOrientation,
                 Matrix4x4.TranslationMatrix(Vector3.Scale(-1, this.position)));
-            this._forward = new Vector3(Matrix4x4.MultiplyVector4(orientation, new Vector4(0, 0, 1)));
+            this._forward = Matrix4x4.MultiplyVector4(orientation, new Vector4(0, 0, 1, 1)).toVector3();
         }
     }
 }

@@ -60,8 +60,9 @@ namespace threed {
 
         private transformAndClip(instance: Instance) {
             const transform = Matrix4x4.Multiply(this.engine.camera.transform, instance.transform);
-            const center = Matrix4x4.MultiplyVector4(transform, new Vector4(instance.model.center));
+            const center = Matrix4x4.MultiplyVector4(transform, instance.model.center.toVector4()).toVector3();
             const radius2 = instance.model.radius * instance.model.radius;
+
             for (const plane of this.engine.camera.clippingPlanes) {
                 const distance2 = Vector3.Dot(plane.normal, center) + plane.direction;
                 if (distance2 < -radius2) {
@@ -69,9 +70,9 @@ namespace threed {
                 }
             }
 
-            const vertices = [];
+            let vertices = [];
             for (const vertex of instance.model.vertices) {
-                vertices.push(Matrix4x4.MultiplyVector4(transform, new Vector4(vertex)));
+                vertices.push(Matrix4x4.MultiplyVector4(transform, vertex.toVector4()).toVector3());
             }
 
             let triangles = instance.model.triangles.slice();
@@ -88,7 +89,7 @@ namespace threed {
         private renderModel(color: number, model: Model) {
             const projected: Point[] = [];
             for (const vertex of model.vertices) {
-                projected.push(this.projectVertex(new Vector4(vertex)));
+                projected.push(this.projectVertex(vertex));
             }
             for (const triangle of model.triangles) {
                 this.renderTriangle(color, triangle, model.vertices, projected);
@@ -138,7 +139,7 @@ namespace threed {
                 [iz_left, iz_right] = [iz012, iz02];
             }
 
-            const rotatedLight = Matrix4x4.MultiplyVector4(this.engine.camera.transposedOrientation, new Vector4(this.engine.light.direction))
+            const rotatedLight = Matrix4x4.MultiplyVector4(this.engine.camera.transposedOrientation, this.engine.light.direction.toVector4()).toVector3();
             const cosLightAngle = Vector3.Dot(rotatedLight, normal);
 
             if (this.lightModel === LightModel.Flat) {
