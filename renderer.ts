@@ -65,7 +65,7 @@ namespace threed {
 
             for (const plane of this.engine.camera.clippingPlanes) {
                 const distance2 = Fx.add(Vector3.Dot(plane.normal, center), plane.direction);
-                if (distance2 < Fx.mul(Fx(-1), radius2)) {
+                if (distance2 < Fx.mul(Fx8(-1), radius2)) {
                     return null;
                 }
             }
@@ -111,7 +111,7 @@ namespace threed {
 
             // Backface culling.
             if (this.backfaceCulling) {
-                const center = Vector3.Scale(Fx(-1.0 / 3.0),
+                const center = Vector3.Scale(Fx8(-1.0 / 3.0),
                     Vector3.Add(Vector3.Add(vertices[ti[0]], vertices[ti[1]]), vertices[ti[2]]));
                 if (Vector3.Dot(center, normal) < Fx.zeroFx8) {
                     return;

@@ -73,7 +73,7 @@ namespace threed {
         }
 
         public static ScalingMatrix(scale: number) {
-            const s = Fx(scale);
+            const s = Fx8(scale);
             return new Matrix4x4([
                 [s, Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8],
                 [Fx.zeroFx8, s, Fx.zeroFx8, Fx.zeroFx8],

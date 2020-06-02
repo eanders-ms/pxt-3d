@@ -43,7 +43,7 @@ namespace threed {
         }
 
         public static Magnitude(vec: Vector3) {
-            return Fx(Math.sqrt(Fx.toFloat(Vector3.Dot(vec, vec))));
+            return Fx8(Math.sqrt(Fx.toFloat(Vector3.Dot(vec, vec))));
         }
 
         public static Normalized(vec: Vector3) {

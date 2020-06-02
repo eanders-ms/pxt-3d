@@ -13,10 +13,10 @@ namespace threed {
         constructor(position: Vector3, rotation: Vector3) {
             this.position = position;
             this.rotation = rotation;
-            const s2 = Fx(Math.SQRT2);
-            const ns2 = Fx(-Math.SQRT2);
+            const s2 = Fx8(Math.SQRT2);
+            const ns2 = Fx8(-Math.SQRT2);
             this.clippingPlanes = [
-                new Plane(new Vector3(Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8), Fx(-1)), // Near
+                new Plane(new Vector3(Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8), Fx8(-1)), // Near
                 new Plane(new Vector3(s2, Fx.zeroFx8, s2), Fx.zeroFx8), // Left
                 new Plane(new Vector3(ns2, Fx.zeroFx8, s2), Fx.zeroFx8), // Right
                 new Plane(new Vector3(Fx.zeroFx8, ns2, s2), Fx.zeroFx8), // Top
@@ -34,7 +34,7 @@ namespace threed {
             this.transposedOrientation = Matrix4x4.Transposed(orientation);
             this.transform = Matrix4x4.Multiply(
                 this.transposedOrientation,
-                Matrix4x4.TranslationMatrix(Vector3.Scale(Fx(-1), this.position)));
+                Matrix4x4.TranslationMatrix(Vector3.Scale(Fx8(-1), this.position)));
             this._forward = Matrix4x4.MultiplyVector4(orientation, new Vector4(Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8, Fx.oneFx8)).toVector3();
         }
     }

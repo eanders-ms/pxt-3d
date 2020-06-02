@@ -13,7 +13,7 @@ namespace threed {
         }
 
         public static Cube() {
-            const negOneFx8 = Fx(-1);
+            const negOneFx8 = Fx8(-1);
             const vertices = [
                 new Vector3(Fx.oneFx8, Fx.oneFx8, Fx.oneFx8),
                 new Vector3(negOneFx8, Fx.oneFx8, Fx.oneFx8),
@@ -39,7 +39,7 @@ namespace threed {
                 new Triangle([2, 7, 3], new Vector3(Fx.zeroFx8, negOneFx8, Fx.zeroFx8)),
             ];
 
-            return new Model(vertices, triangles, new Vector3(Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8), Fx(Math.sqrt(3)));
+            return new Model(vertices, triangles, new Vector3(Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8), Fx8(Math.sqrt(3)));
         }
     }
 }
