@@ -156,11 +156,14 @@ namespace threed {
                 const xl = x_left[y - p0.y] | 0;
                 const xr = x_right[y - p0.y] | 0;
 
-                const screeny = this.image.height >> 1 - (y | 0) - 1;
+                const screeny = (this.image.height >> 1) - (y | 0) - 1;
 
                 for (let x = xl; x < xr; ++x) {
-                    const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
-                    const zscan = interpolate(xl, zl, xr, zr);
+                    let zscan: number[] = [];
+                    if (this.depthCheckEnabled) {
+                        const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
+                        zscan = interpolate(xl, zl, xr, zr);
+                    }
                     if (this.writeDepth(x, y, zscan[x - xl])) {
                         if (this.lightModel === LightModel.Dither) {
                             let shaded = 0;
@@ -169,7 +172,7 @@ namespace threed {
                             } else {
                                 let lightRamp = Fx.toFloat(cosLightAngle);
                                 const ditherOffset = Math.floor(lightRamp * 17) * 4;
-                                let screenx = this.image.width >> 1 + (x | 0);
+                                let screenx = (this.image.width >> 1) + (x | 0);
                                 let ditherX = ditherOffset + (screenx % 4);
                                 let ditherY = screeny % 4;
                                 let ditherPixel = Dither.getPixel(ditherX, ditherY);
@@ -191,9 +194,10 @@ namespace threed {
 
         private writeDepth(x: number, y: number, inv_z: number) {
             if (!this.depthCheckEnabled) return true;
+            if (inv_z === undefined) return true;
 
-            x = this.image.width >> 1 + (x | 0);
-            y = this.image.height >> 1 - (y | 0) - 1;
+            x = (this.image.width >> 1) + (x | 0);
+            y = (this.image.height >> 1) - (y | 0) - 1;
 
             if (x < 0 || x >= this.image.width || y < 0 || y >= this.image.height) {
                 return false;
