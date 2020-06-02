@@ -20,7 +20,8 @@
         "instance.ts",
         "model.ts",
         "matrix4x4.ts",
-        "point.ts"
+        "point.ts",
+        "fxtrig.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [

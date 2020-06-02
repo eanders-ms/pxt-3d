@@ -1,21 +1,10 @@
 namespace threed {
-    const DegToRad = Math.PI / 180.0;
-
     export class Matrix4x4 {
         public data: Fx8[][];
 
 
         constructor(data: Fx8[][]) {
             this.data = data;
-        }
-
-        public static FromNumbers(data: number[][]) {
-            return new Matrix4x4([
-                [Fx(data[0][0]), Fx(data[0][1]), Fx(data[0][2]), Fx(data[0][3])],
-                [Fx(data[1][0]), Fx(data[1][1]), Fx(data[1][2]), Fx(data[1][3])],
-                [Fx(data[2][0]), Fx(data[2][1]), Fx(data[2][2]), Fx(data[2][3])],
-                [Fx(data[3][0]), Fx(data[3][1]), Fx(data[3][2]), Fx(data[3][3])],
-            ]);
         }
 
         public static Identity() {
@@ -35,38 +24,43 @@ namespace threed {
         }
 
         public static RotationMatrixFromEulerAngles(angles: Vector3) {
-            const A = Fx.toFloat(angles.x) * DegToRad;
-            const B = Fx.toFloat(angles.y) * DegToRad;
-            const Y = Fx.toFloat(angles.z) * DegToRad;
+            const A = angles.x;
+            const B = angles.y;
+            const Y = angles.z;
 
-            const sA = Math.sin(A);
-            const cA = Math.cos(A);
-            const sB = Math.sin(B);
-            const cB = Math.cos(B);
-            const sY = Math.sin(Y);
-            const cY = Math.cos(Y);
+            const sA = fxsin(A);
+            const cA = fxcos(A);
+            const sB = fxsin(B);
+            const cB = fxcos(B);
+            const sY = fxsin(Y);
+            const cY = fxcos(Y);
 
-            return Matrix4x4.FromNumbers([
-                [cA * cB, cA * sB * sY - sA * cY, cA * sB * cY + sA * sY, 0],
-                [sA * cB, sA * sB * sY + cA * cY, sA * sB * cY - cA * sY, 0],
-                [-sB, cB * sY, cB * cY, 0],
-                [0, 0, 0, 1]
+            return new Matrix4x4([
+                [Fx.mul(cA, cB), Fx.sub(Fx.mul(Fx.mul(cA, sB), sY), Fx.mul(sA, cY)), Fx.add(Fx.mul(Fx.mul(cA, sB), cY), Fx.mul(sA, sY)), Fx.zeroFx8],
+                [Fx.mul(sA, cB), Fx.add(Fx.mul(Fx.mul(sA, sB), sY), Fx.mul(cA, cY)), Fx.sub(Fx.mul(Fx.mul(sA, sB), cY), Fx.mul(cA, sY)), Fx.zeroFx8],
+                [Fx.neg(sB), Fx.mul(cB, sY), Fx.mul(cB, cY), Fx.zeroFx8],
+                [Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8]
             ]);
         }
 
-        public static RotationMatrixFromAxisAngle(axis: Vector3, angle: number) {
-            const O = angle * DegToRad;
-            const s = Math.sin(O);
-            const c = Math.cos(O);
-            const x = Fx.toFloat(axis.x);
-            const y = Fx.toFloat(axis.y);
-            const z = Fx.toFloat(axis.z);
+        public static RotationMatrixFromAxisAngle(axis: Vector3, angle: Fx8) {
+            const O = angle;
+            const s = fxsin(O);
+            const c = fxcos(O);
+            const mc = Fx.sub(Fx.oneFx8, c);
+            const x = axis.x;
+            const y = axis.y;
+            const z = axis.z;
 
-            return Matrix4x4.FromNumbers([
-                [c + x * x * (1 - c), x * y * (1 - c) - x * s, x * z * (1 - c) + y * s, 0],
-                [y * x * (1 - c) + x * s, c + y * y * (1 - c), y * z * (1 - c) - x * s, 0],
-                [z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + z * z * (1 - c), 0],
-                [0, 0, 0, 1]
+            //  [c + x * x * (1 - c), x * y * (1 - c) - x * s, x * z * (1 - c) + y * s, 0],
+            //  [y * x * (1 - c) + x * s, c + y * y * (1 - c), y * z * (1 - c) - x * s, 0],
+            //  [z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + z * z * (1 - c), 0],
+            //  [0, 0, 0, 1]
+            return new Matrix4x4([
+                [Fx.add(c, Fx.mul(Fx.mul(x, x), mc)), Fx.sub(Fx.mul(Fx.mul(x, y), mc), Fx.mul(x, s)), Fx.add(Fx.mul(Fx.mul(x, z), mc), Fx.mul(y, s)), Fx.zeroFx8],
+                [Fx.add(Fx.mul(Fx.mul(y, x), mc), Fx.mul(x, s)), Fx.add(c, Fx.mul(Fx.mul(y, y), mc)), Fx.sub(Fx.mul(Fx.mul(y, z), mc), Fx.mul(x, s)), Fx.zeroFx8],
+                [Fx.sub(Fx.mul(Fx.mul(z, x), mc), Fx.mul(y, s)), Fx.add(Fx.mul(Fx.mul(z, y), mc), Fx.mul(x, s)), Fx.add(c, Fx.mul(Fx.mul(z, z), mc)), Fx.zeroFx8],
+                [Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8]
             ]);
         }
 

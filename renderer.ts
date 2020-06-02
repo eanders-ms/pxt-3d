@@ -125,8 +125,11 @@ namespace threed {
 
             // Compute attribute values at the edges.
             const [x02, x012] = edgeInterpolate(p0.y, p0.x, p1.y, p1.x, p2.y, p2.x);
-            const [iz02, iz012] = edgeInterpolate(p0.y, Fx.div(Fx.oneFx8, v0.z), p1.y, Fx.div(Fx.oneFx8, v1.z), p2.y, Fx.div(Fx.oneFx8, v2.z));
+            let iz02: number[], iz012: number[];
 
+            if (this.depthCheckEnabled) {
+                [iz02, iz012] = edgeInterpolate(p0.y, 1 / Fx.toFloat(v0.z), p1.y, 1 / Fx.toFloat(v1.z), p2.y, 1 / Fx.toFloat(v2.z));
+            }
             let x_left, x_right;
             let iz_left, iz_right;
             // Determine which is left and which is right.
@@ -149,25 +152,24 @@ namespace threed {
             }
 
             // Draw horizontal segments.
-            for (let y = p0.y; y < p2.y; y = Fx.add(y, Fx.oneFx8)) {
-                const xl = x_left[y - p0.y] | Fx.zeroFx8;
-                const xr = x_right[Fx.sub(y, p0.y)] | Fx.zeroFx8;
+            for (let y = p0.y; y < p2.y; ++y) {
+                const xl = x_left[y - p0.y] | 0;
+                const xr = x_right[y - p0.y] | 0;
 
-                const screeny = this.image.height / 2 - (y | 0) - 1;
+                const screeny = this.image.height >> 1 - (y | 0) - 1;
 
-                for (let x = xl; x < xr; Fx.add(x, Fx.oneFx8)) {
-                    const screenx = this.image.width / 2 + (x | 0);
+                for (let x = xl; x < xr; ++x) {
                     const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
                     const zscan = interpolate(xl, zl, xr, zr);
                     if (this.writeDepth(x, y, zscan[x - xl])) {
                         if (this.lightModel === LightModel.Dither) {
                             let shaded = 0;
-                            if (cosLightAngle < 0) {
+                            if (cosLightAngle < Fx.zeroFx8) {
                                 shaded = 1;
                             } else {
-                                let lightRamp = cosLightAngle;
+                                let lightRamp = Fx.toFloat(cosLightAngle);
                                 const ditherOffset = Math.floor(lightRamp * 17) * 4;
-                                let screenx = this.image.width / 2 + (x | 0);
+                                let screenx = this.image.width >> 1 + (x | 0);
                                 let ditherX = ditherOffset + (screenx % 4);
                                 let ditherY = screeny % 4;
                                 let ditherPixel = Dither.getPixel(ditherX, ditherY);
@@ -190,8 +192,8 @@ namespace threed {
         private writeDepth(x: number, y: number, inv_z: number) {
             if (!this.depthCheckEnabled) return true;
 
-            x = this.image.width / 2 + (x | 0);
-            y = this.image.height / 2 - (y | 0) - 1;
+            x = this.image.width >> 1 + (x | 0);
+            y = this.image.height >> 1 - (y | 0) - 1;
 
             if (x < 0 || x >= this.image.width || y < 0 || y >= this.image.height) {
                 return false;
@@ -206,8 +208,8 @@ namespace threed {
         }
 
         private putPixel(x: number, y: number, color: number) {
-            x = this.image.width / 2 + (x | 0);
-            y = this.image.height / 2 - (y | 0) - 1;
+            x = this.image.width >> 1 + (x | 0);
+            y = this.image.height >> 1 - (y | 0) - 1;
 
             if (x < 0 || x >= this.image.width || y < 0 || y >= this.image.height) {
                 return;
@@ -250,32 +252,30 @@ namespace threed {
         private viewportToImage(p2d: Point) {
             return new Point(
                 (p2d.x * this.image.width / ViewportSize) | 0,
-                (p2d.y * this.image.height / ViewportSize) | 0,
-                undefined);
+                (p2d.y * this.image.height / ViewportSize) | 0);
         }
 
         private imageToViewport(p2d: Point) {
             return new Point(
                 (p2d.x * ViewportSize / this.image.width),
-                (p2d.y * ViewportSize / this.image.height),
-                undefined);
+                (p2d.y * ViewportSize / this.image.height));
         }
 
         private projectVertex(v: Vector3) {
+            const z = Fx.toFloat(v.z);
             return this.viewportToImage(new Point(
-                v.x * ProjectionPlaneZ / v.z,
-                v.y * ProjectionPlaneZ / v.z,
-                undefined));
+                Fx.toFloat(v.x) * ProjectionPlaneZ / z,
+                Fx.toFloat(v.y) * ProjectionPlaneZ / z));
         }
     }
 
-    function interpolate(i0: Fx8, d0: Fx8, i1: Fx8, d1: Fx8): Fx8[] {
+    function interpolate(i0: number, d0: number, i1: number, d1: number): number[] {
         if (i0 === i1) {
             return [d0];
         }
 
         const values = [];
-        const a = Fx.div(Fx.sub(d1, d0), Fx.sub(i1, i0));
+        const a = (d1 - d0) / (i1 - i0);
         let d = d0;
         for (let i = i0; i <= i1; ++i) {
             values.push(d);
@@ -294,15 +294,15 @@ namespace threed {
     }
 
     function computeTriangleNormal(v0: Vector3, v1: Vector3, v2: Vector3) {
-        const v0v1 = Vector3.Add(v1, Vector3.Scale(-1, v0));
-        const v0v2 = Vector3.Add(v2, Vector3.Scale(-1, v0));
+        const v0v1 = Vector3.Add(v1, Vector3.Scale(negOneFx8, v0));
+        const v0v2 = Vector3.Add(v2, Vector3.Scale(negOneFx8, v0));
         return Vector3.Normalized(Vector3.Cross(v0v1, v0v2));
     }
 
-    function edgeInterpolate(y0: Fx8, v0: Fx8, y1: Fx8, v1: Fx8, y2: Fx8, v2: Fx8): Fx8[][] {
-        const v01: Fx8[] = interpolate(y0, v0, y1, v1);
-        const v12: Fx8[] = interpolate(y1, v1, y2, v2);
-        const v02: Fx8[] = interpolate(y0, v0, y2, v2);
+    function edgeInterpolate(y0: number, v0: number, y1: number, v1: number, y2: number, v2: number): number[][] {
+        const v01: number[] = interpolate(y0, v0, y1, v1);
+        const v12: number[] = interpolate(y1, v1, y2, v2);
+        const v02: number[] = interpolate(y0, v0, y2, v2);
         v01.pop();
         const v012 = v01.concat(v12);
         return [v02, v012];
@@ -313,9 +313,9 @@ namespace threed {
         const v1 = vertices[triangle.indices[1]];
         const v2 = vertices[triangle.indices[2]];
 
-        const in0 = (Vector3.Dot(plane.normal, v0) + plane.direction) > 0 ? 1 : 0;
-        const in1 = (Vector3.Dot(plane.normal, v1) + plane.direction) > 0 ? 1 : 0;
-        const in2 = (Vector3.Dot(plane.normal, v2) + plane.direction) > 0 ? 1 : 0;
+        const in0 = Fx.add(Vector3.Dot(plane.normal, v0), plane.direction) > Fx.zeroFx8 ? 1 : 0;
+        const in1 = Fx.add(Vector3.Dot(plane.normal, v1), plane.direction) > Fx.zeroFx8 ? 1 : 0;
+        const in2 = Fx.add(Vector3.Dot(plane.normal, v2), plane.direction) > Fx.zeroFx8 ? 1 : 0;
 
         const count = in0 + in1 + in2;
         if (count === 0) {
@@ -324,9 +324,9 @@ namespace threed {
             // The triangle is fully in front of the plane.
             triangles.push(triangle);
         } else if (count === 1) {
-            // The triangle has one vertex in. Output is one clipped triangle.
+            // TODO: The triangle has one vertex in. Output is one clipped triangle.
         } else if (count === 2) {
-            // The triangle has two vertices in. Output is two clipped triangles.
+            // TODO: The triangle has two vertices in. Output is two clipped triangles.
         }
     }
 }
