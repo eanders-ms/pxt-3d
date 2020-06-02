@@ -212,8 +212,8 @@ namespace threed {
         }
 
         private putPixel(x: number, y: number, color: number) {
-            x = this.image.width >> 1 + (x | 0);
-            y = this.image.height >> 1 - (y | 0) - 1;
+            x = (this.image.width >> 1) + (x | 0);
+            y = (this.image.height >> 1) - (y | 0) - 1;
 
             if (x < 0 || x >= this.image.width || y < 0 || y >= this.image.height) {
                 return;
