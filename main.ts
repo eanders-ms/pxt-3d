@@ -6,6 +6,11 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     engine.renderer.lightModel %= threed.LightModel.Count;
 })
 const engine = new threed.Engine();
+engine.renderer.backfaceCulling = true;
+engine.renderer.depthCheckEnabled = true;
+engine.renderer.overWire = false;
+engine.renderer.lightModel = threed.LightModel.Dither;
+
 const cube = threed.Model.Cube();
 const redCube = new threed.Instance(cube, threed.Colors.Red, new threed.Vector3(Fx8(0), Fx8(0), Fx8(10)), new threed.Vector3(Fx8(0), Fx8(0), Fx8(0)), threed.Vector3.One());
 const blueCube = new threed.Instance(cube, threed.Colors.Blue, new threed.Vector3(Fx8(2.75), Fx8(0), Fx8(10)), new threed.Vector3(Fx8(0), Fx8(0), Fx8(0)), threed.Vector3.One());
