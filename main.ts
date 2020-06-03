@@ -21,6 +21,7 @@ game.onUpdate(function () {
 const dy = Fx.neg(Fx8(controller.dy(15)));
 engine.camera.rotation.y = Fx.add(engine.camera.rotation.y, dx);
 engine.camera.position = threed.Vector3.Add(engine.camera.position, threed.Vector3.Scale(dy, engine.camera.forward));
+// Note: angles are not in radians OR degrees here! They're in a 256-step unit circle.
 redCube.rotation.x = Fx.add(redCube.rotation.x, Fx8(1.76));
 redCube.rotation.y = Fx.add(redCube.rotation.y, Fx8(2.33));
 redCube.rotation.z = Fx.sub(redCube.rotation.z, Fx8(0.03));
