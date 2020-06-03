@@ -52,10 +52,6 @@ namespace threed {
             const y = axis.y;
             const z = axis.z;
 
-            //  [c + x * x * (1 - c), x * y * (1 - c) - x * s, x * z * (1 - c) + y * s, 0],
-            //  [y * x * (1 - c) + x * s, c + y * y * (1 - c), y * z * (1 - c) - x * s, 0],
-            //  [z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + z * z * (1 - c), 0],
-            //  [0, 0, 0, 1]
             return new Matrix4x4([
                 [Fx.add(c, Fx.mul(Fx.mul(x, x), mc)), Fx.sub(Fx.mul(Fx.mul(x, y), mc), Fx.mul(x, s)), Fx.add(Fx.mul(Fx.mul(x, z), mc), Fx.mul(y, s)), Fx.zeroFx8],
                 [Fx.add(Fx.mul(Fx.mul(y, x), mc), Fx.mul(x, s)), Fx.add(c, Fx.mul(Fx.mul(y, y), mc)), Fx.sub(Fx.mul(Fx.mul(y, z), mc), Fx.mul(x, s)), Fx.zeroFx8],
