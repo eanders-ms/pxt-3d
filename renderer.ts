@@ -35,6 +35,7 @@ namespace threed {
 
         constructor(private engine: Engine) {
             this.image = scene.backgroundImage();
+            //this.image = image.create(screen.width, screen.height);
         }
 
         public render() {
@@ -45,6 +46,7 @@ namespace threed {
             }
             this.image.fill(Colors.Black);
             this.renderScene();
+            //screen.drawImage(this.image, 0, 0);
         }
 
         private renderScene() {
@@ -156,33 +158,43 @@ namespace threed {
                 const xl = x_left[y - p0.y] | 0;
                 const xr = x_right[y - p0.y] | 0;
 
-                const screeny = (this.image.height >> 1) - (y | 0) - 1;
-
-                for (let x = xl; x < xr; ++x) {
+                if (xr > xl) {
+                    const screeny = (this.image.height >> 1) - (y | 0) - 1;
                     let zscan: number[] = [];
                     if (this.depthCheckEnabled) {
                         const [zl, zr] = [iz_left[y - p0.y], iz_right[y - p0.y]];
                         zscan = interpolate(xl, zl, xr, zr);
                     }
-                    if (this.writeDepth(x, y, zscan[x - xl])) {
-                        if (this.lightModel === LightModel.Dither) {
-                            let shaded = 0;
-                            if (cosLightAngle < Fx.zeroFx8) {
-                                shaded = 1;
+                    let scanline = image.create(xr - xl, 1);
+                    let screenxl = (this.image.width >> 1) + (xl | 0);
+                    for (let x = xl, i = 0; x < xr; ++x, ++i) {
+                        const screenx = (this.image.width >> 1) + (x | 0);
+                        if (this.writeDepth(x, y, zscan[x - xl])) {
+                            if (this.lightModel === LightModel.Dither) {
+                                let shaded = 0;
+                                if (cosLightAngle < Fx.zeroFx8) {
+                                    shaded = 1;
+                                } else {
+                                    let lightRamp = Fx.toFloat(cosLightAngle);
+                                    const ditherOffset = Math.floor(lightRamp * 17) * 4;
+                                    let screenx = (this.image.width >> 1) + (x | 0);
+                                    let ditherX = ditherOffset + (screenx % 4);
+                                    let ditherY = screeny % 4;
+                                    let ditherPixel = Dither.getPixel(ditherX, ditherY);
+                                    shaded = ditherPixel ? 1 : 0;
+                                }
+                                //this.putPixel(x, y, color + shaded);
+                                scanline.setPixel(i, 0, color + shaded);
                             } else {
-                                let lightRamp = Fx.toFloat(cosLightAngle);
-                                const ditherOffset = Math.floor(lightRamp * 17) * 4;
-                                let screenx = (this.image.width >> 1) + (x | 0);
-                                let ditherX = ditherOffset + (screenx % 4);
-                                let ditherY = screeny % 4;
-                                let ditherPixel = Dither.getPixel(ditherX, ditherY);
-                                shaded = ditherPixel ? 1 : 0;
+                                //this.putPixel(x, y, color);
+                                scanline.setPixel(i, 0, color);
                             }
-                            this.putPixel(x, y, color + shaded);
                         } else {
-                            this.putPixel(x, y, color);
+                            scanline.setPixel(i, 0, Colors.Transparent);
                         }
                     }
+                    this.image.drawTransparentImage(scanline, screenxl, screeny);
+                    scanline = null;
                 }
             }
             if (this.overWire) {

@@ -24,7 +24,7 @@ namespace threed {
             image.setPalette(Colors.Palette);
         }
 
-        public step(dt: number) {
+        public step() {
             // Handle input
             // Update animations
             // Update physics

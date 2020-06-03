@@ -1,6 +1,6 @@
 namespace threed {
     export const Colors = {
-        /* Transparent: 0, */
+        Transparent: 0,
         White: 1,
         Yellow: 3,
         Magenta: 5,

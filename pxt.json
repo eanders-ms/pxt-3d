@@ -23,7 +23,7 @@
         "point.ts",
         "fxtrig.ts"
     ],
-    "preferredEditor": "blocksprj",
+    "preferredEditor": "tsprj",
     "testFiles": [
         "test.ts"
     ]
