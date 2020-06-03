@@ -11,12 +11,20 @@ namespace threed {
             this.z = z;
         }
 
+        public static FromNumbers(x: number, y: number, z: number) {
+            return new Vector3(Fx8(x), Fx8(y), Fx8(z));
+        }
+
         public toVector4() {
             return new Vector4(this.x, this.y, this.z, Fx.oneFx8);
         }
 
         public static Zero() {
             return new Vector3(Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8);
+        }
+
+        public static One() {
+            return new Vector3(Fx.oneFx8, Fx.oneFx8, Fx.oneFx8);
         }
 
         public static Scale(k: Fx8, vec: Vector3) {

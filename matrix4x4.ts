@@ -77,6 +77,14 @@ namespace threed {
                 [Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8]]);
         }
 
+        public static NonUniformScalingMatrix(scale: Vector3) {
+            return new Matrix4x4([
+                [scale.x, Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8],
+                [Fx.zeroFx8, scale.y, Fx.zeroFx8, Fx.zeroFx8],
+                [Fx.zeroFx8, Fx.zeroFx8, scale.z, Fx.zeroFx8],
+                [Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8]]);
+        }
+
         public static MultiplyVector4(mat: Matrix4x4, vec4: Vector4) {
             const result = [Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8];
             const vec = [vec4.x, vec4.y, vec4.z, vec4.w];
