@@ -35,7 +35,6 @@ namespace threed {
 
         constructor(private engine: Engine) {
             this.image = scene.backgroundImage();
-            //this.image = image.create(screen.width, screen.height);
         }
 
         public render() {
@@ -46,7 +45,6 @@ namespace threed {
             }
             this.image.fill(Colors.Black);
             this.renderScene();
-            //screen.drawImage(this.image, 0, 0);
         }
 
         private renderScene() {
@@ -183,10 +181,8 @@ namespace threed {
                                     let ditherPixel = Dither.getPixel(ditherX, ditherY);
                                     shaded = ditherPixel ? 1 : 0;
                                 }
-                                //this.putPixel(x, y, color + shaded);
                                 scanline.setPixel(i, 0, color + shaded);
                             } else {
-                                //this.putPixel(x, y, color);
                                 scanline.setPixel(i, 0, color);
                             }
                         } else {
@@ -269,12 +265,6 @@ namespace threed {
             return new Point(
                 (p2d.x * this.image.width / ViewportSize) | 0,
                 (p2d.y * this.image.height / ViewportSize) | 0);
-        }
-
-        private imageToViewport(p2d: Point) {
-            return new Point(
-                (p2d.x * ViewportSize / this.image.width),
-                (p2d.y * ViewportSize / this.image.height));
         }
 
         private projectVertex(v: Vector3) {
