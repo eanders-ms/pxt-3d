@@ -43,6 +43,7 @@ namespace threed {
         }
 
         public static Magnitude(vec: Vector3) {
+            // TODO: Make faster - don't use Math.sqrt
             return Fx8(Math.sqrt(Fx.toFloat(Vector3.Dot(vec, vec))));
         }
 

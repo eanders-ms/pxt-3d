@@ -11,7 +11,6 @@ namespace threed {
             this.y = y;
             this.z = z;
             this.w = w;
-
         }
 
         public toVector3() {
