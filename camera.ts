@@ -20,11 +20,11 @@ namespace threed {
             const s2 = Fx8(Math.SQRT2);
             const ns2 = Fx8(-Math.SQRT2);
             this._clippingPlanes = [
-                new Plane(new Vector3(Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8), negOneFx8), // Near
-                new Plane(new Vector3(s2, Fx.zeroFx8, s2), Fx.zeroFx8), // Left
-                new Plane(new Vector3(ns2, Fx.zeroFx8, s2), Fx.zeroFx8), // Right
-                new Plane(new Vector3(Fx.zeroFx8, ns2, s2), Fx.zeroFx8), // Top
-                new Plane(new Vector3(Fx.zeroFx8, s2, s2), Fx.zeroFx8), // Bottom
+                new Plane(new Vector3(Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8), Vector3.Zero()), // Near
+                new Plane(new Vector3(s2, Fx.zeroFx8, s2), Vector3.Zero()), // Left
+                new Plane(new Vector3(ns2, Fx.zeroFx8, s2), Vector3.Zero()), // Right
+                new Plane(new Vector3(Fx.zeroFx8, ns2, s2), Vector3.Zero()), // Top
+                new Plane(new Vector3(Fx.zeroFx8, s2, s2), Vector3.Zero()), // Bottom
             ];
             this.update();
         }

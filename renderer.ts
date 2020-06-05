@@ -79,8 +79,8 @@ namespace threed {
             const radius2 = Fx.mul(instance.model.radius, instance.model.radius);
 
             for (const plane of this.engine.camera.clippingPlanes) {
-                const distance2 = Fx.add(Vector3.Dot(plane.normal, center), plane.direction);
-                if (distance2 < Fx.mul(Fx8(-1), radius2)) {
+                const distance2 = Vector3.Dot(plane.normal, center);
+                if (distance2 < Fx.mul(negOneFx8, radius2)) {
                     return null;
                 }
             }
@@ -333,9 +333,9 @@ namespace threed {
         const v1 = vertices[triangle.indices[1]];
         const v2 = vertices[triangle.indices[2]];
 
-        const in0 = Fx.add(Vector3.Dot(plane.normal, v0), plane.direction) > Fx.zeroFx8 ? 1 : 0;
-        const in1 = Fx.add(Vector3.Dot(plane.normal, v1), plane.direction) > Fx.zeroFx8 ? 1 : 0;
-        const in2 = Fx.add(Vector3.Dot(plane.normal, v2), plane.direction) > Fx.zeroFx8 ? 1 : 0;
+        const in0 = Vector3.Dot(plane.normal, v0) > Fx.zeroFx8 ? 1 : 0;
+        const in1 = Vector3.Dot(plane.normal, v1) > Fx.zeroFx8 ? 1 : 0;
+        const in2 = Vector3.Dot(plane.normal, v2) > Fx.zeroFx8 ? 1 : 0;
 
         const count = in0 + in1 + in2;
         if (count === 0) {
