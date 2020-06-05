@@ -37,7 +37,7 @@ namespace threed {
         }
 
         public orbit(pt: Vector3, dist: Fx8, angle: Fx8, normal: Vector3) {
-            // Assuming here that [1, 0, 0] represents a zero-degree rotation on the unit circle.
+            // Assuming here that [1, 0, 0] represents a zero-degree rotation on a unit circle in the XZ plane.
             const rotation = Matrix4x4.RotationMatrixFromAxisAngle(normal, angle);
             const rotated = Matrix4x4.MultiplyVector4(rotation, Vector3.Scale(dist, Vector3.X()).toVector4()).toVector3();
             this._position = Vector3.Add(rotated, pt);
