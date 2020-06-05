@@ -31,8 +31,6 @@ namespace threed {
         1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 . 1 1 1 . 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . 1 . . . 1 . . . . . . . . .
         1 1 1 1 . 1 1 1 . 1 1 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 . . . 1 . . . 1 . . . . . . . . . . . . . . . . . . . . . . . .
     `;
- 
-
 
     export interface IRenderer {
         backfaceCulling: boolean;
@@ -58,8 +56,6 @@ namespace threed {
         public render() {
             if (this.depthCheckEnabled) {
                 this.depth = [];
-                // hardware-specific compiler doesn't like this line
-                //this.depth.length = this.image.width * this.image.height;
             }
             this.image.fill(Colors.Black);
             this.renderScene();
@@ -146,7 +142,7 @@ namespace threed {
             let iz02: number[], iz012: number[];
 
             if (this.depthCheckEnabled) {
-                [iz02, iz012] = edgeInterpolate(p0.y, 1 / Fx.toFloat(v0.z), p1.y, 1 / Fx.toFloat(v1.z), p2.y, 1 / Fx.toFloat(v2.z));
+                [iz02, iz012] = edgeInterpolate(p0.y, Fx.toFloat(v0.z), p1.y, Fx.toFloat(v1.z), p2.y, Fx.toFloat(v2.z));
             }
             let x_left, x_right;
             let iz_left, iz_right;
@@ -185,7 +181,7 @@ namespace threed {
                     let screenxl = (this.image.width >> 1) + (xl | 0);
                     for (let x = xl, i = 0; x < xr; ++x, ++i) {
                         const screenx = (this.image.width >> 1) + (x | 0);
-                        if (this.writeDepth(x, y, zscan[x - xl])) {
+                        if (!this.depthCheckEnabled || this.writeDepth(x, y, zscan[x - xl])) {
                             if (this.lightModel === LightModel.Dither) {
                                 let shaded = 0;
                                 if (cosLightAngle < Fx.zeroFx8) {
@@ -218,9 +214,8 @@ namespace threed {
             }
         }
 
-        private writeDepth(x: number, y: number, inv_z: number) {
-            if (!this.depthCheckEnabled) return true;
-            if (inv_z === undefined) return true;
+        private writeDepth(x: number, y: number, z: number) {
+            if (z === undefined) return true;
 
             x = (this.image.width >> 1) + (x | 0);
             y = (this.image.height >> 1) - (y | 0) - 1;
@@ -230,8 +225,8 @@ namespace threed {
             }
 
             const offset = x + this.image.width * y;
-            if (this.depth[offset] === undefined || this.depth[offset] < inv_z) {
-                this.depth[offset] = inv_z;
+            if (this.depth[offset] === undefined || this.depth[offset] >= z) {
+                this.depth[offset] = z;
                 return true;
             }
             return false;
