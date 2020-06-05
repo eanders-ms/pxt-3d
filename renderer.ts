@@ -66,9 +66,9 @@ namespace threed {
         }
 
         private renderScene() {
-            this.engine.camera.updateTransform();
+            this.engine.camera.update();
             for (const instance of this.engine.instances) {
-                instance.updateTransform();
+                instance.update();
                 const clipped = this.transformAndClip(instance);
                 if (clipped) {
                     this.renderModel(instance.color, clipped);

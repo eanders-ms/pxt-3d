@@ -26,6 +26,18 @@ namespace threed {
         public static One() {
             return new Vector3(Fx.oneFx8, Fx.oneFx8, Fx.oneFx8);
         }
+       
+        public static X() {
+            return new Vector3(Fx.oneFx8, Fx.zeroFx8, Fx.zeroFx8);
+        }
+
+        public static Y() {
+            return new Vector3(Fx.zeroFx8, Fx.oneFx8, Fx.zeroFx8);
+        }
+
+        public static Z() {
+            return new Vector3(Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8);
+        }
 
         public static Scale(k: Fx8, vec: Vector3) {
             return new Vector3(Fx.mul(k, vec.x), Fx.mul(k, vec.y), Fx.mul(k, vec.z));
@@ -59,6 +71,10 @@ namespace threed {
             const mag = Vector3.Magnitude(vec);
             if (!mag) return vec;
             return Vector3.Scale(Fx.div(Fx.oneFx8, mag), vec);
+        }
+
+        public static Abs(vec: Vector3) {
+            return new Vector3(Fx.abs(vec.x), Fx.abs(vec.y), Fx.abs(vec.z));
         }
     }
 }

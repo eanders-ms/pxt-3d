@@ -2,18 +2,18 @@ namespace threed {
     // Quarter arc of sin values (64 entries) in a 256-angle unit circle
     const sinTable: Fx8[] = [0 as any as Fx8, 6 as any as Fx8, 12 as any as Fx8, 18 as any as Fx8, 25 as any as Fx8, 31 as any as Fx8, 37 as any as Fx8, 43 as any as Fx8, 49 as any as Fx8, 56 as any as Fx8, 62 as any as Fx8, 68 as any as Fx8, 74 as any as Fx8, 80 as any as Fx8, 86 as any as Fx8, 92 as any as Fx8, 97 as any as Fx8, 103 as any as Fx8, 109 as any as Fx8, 115 as any as Fx8, 120 as any as Fx8, 126 as any as Fx8, 131 as any as Fx8, 136 as any as Fx8, 142 as any as Fx8, 147 as any as Fx8, 152 as any as Fx8, 157 as any as Fx8, 162 as any as Fx8, 167 as any as Fx8, 171 as any as Fx8, 176 as any as Fx8, 181 as any as Fx8, 185 as any as Fx8, 189 as any as Fx8, 193 as any as Fx8, 197 as any as Fx8, 201 as any as Fx8, 205 as any as Fx8, 209 as any as Fx8, 212 as any as Fx8, 216 as any as Fx8, 219 as any as Fx8, 222 as any as Fx8, 225 as any as Fx8, 228 as any as Fx8, 231 as any as Fx8, 234 as any as Fx8, 236 as any as Fx8, 238 as any as Fx8, 241 as any as Fx8, 243 as any as Fx8, 244 as any as Fx8, 246 as any as Fx8, 248 as any as Fx8, 249 as any as Fx8, 251 as any as Fx8, 252 as any as Fx8, 253 as any as Fx8, 254 as any as Fx8, 254 as any as Fx8, 255 as any as Fx8, 255 as any as Fx8, 255 as any as Fx8, 256 as any as Fx8];
 
-    const TWO_PI = 256;
-    const PI = 128;
-    const PI_OVER_2 = 64;
-    const TWO_PI_OVER_3 = 192;
-    const TWO_PI_FX8 = Fx8(TWO_PI);
-    const PI_FX8 = Fx8(PI);
-    const PI_OVER_2_FX8 = Fx8(PI_OVER_2);
-    const TWO_PI_OVER_3_FX8 = Fx8(TWO_PI_OVER_3);
+    export const TWO_PI = 256;
+    export const PI = 128;
+    export const PI_OVER_2 = 64;
+    export const TWO_PI_OVER_3 = 192;
+    export const TWO_PI_FX8 = Fx8(TWO_PI);
+    export const PI_FX8 = Fx8(PI);
+    export const PI_OVER_2_FX8 = Fx8(PI_OVER_2);
+    export const TWO_PI_OVER_3_FX8 = Fx8(TWO_PI_OVER_3);
 
     export const negOneFx8 = Fx8(-1);
 
-    function fxmod(a: Fx8, b: Fx8) {
+    export function fxmod(a: Fx8, b: Fx8) {
         return ((a as any as number) % (b as any as number)) as any as Fx8;
     }
 

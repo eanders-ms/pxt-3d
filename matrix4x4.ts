@@ -2,7 +2,6 @@ namespace threed {
     export class Matrix4x4 {
         public data: Fx8[][];
 
-
         constructor(data: Fx8[][]) {
             this.data = data;
         }
@@ -56,6 +55,16 @@ namespace threed {
                 [Fx.add(c, Fx.mul(Fx.mul(x, x), mc)), Fx.sub(Fx.mul(Fx.mul(x, y), mc), Fx.mul(x, s)), Fx.add(Fx.mul(Fx.mul(x, z), mc), Fx.mul(y, s)), Fx.zeroFx8],
                 [Fx.add(Fx.mul(Fx.mul(y, x), mc), Fx.mul(x, s)), Fx.add(c, Fx.mul(Fx.mul(y, y), mc)), Fx.sub(Fx.mul(Fx.mul(y, z), mc), Fx.mul(x, s)), Fx.zeroFx8],
                 [Fx.sub(Fx.mul(Fx.mul(z, x), mc), Fx.mul(y, s)), Fx.add(Fx.mul(Fx.mul(z, y), mc), Fx.mul(x, s)), Fx.add(c, Fx.mul(Fx.mul(z, z), mc)), Fx.zeroFx8],
+                [Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8]
+            ]);
+        }
+
+        // Note: Axes should be orthogonal and normalized.
+        public static RotationMatrixFromAxisVectors(forward: Vector3, right: Vector3, up: Vector3) {
+            return new Matrix4x4([
+                [right.x, up.x, forward.x, Fx.zeroFx8],
+                [right.y, up.y, forward.y, Fx.zeroFx8],
+                [right.z, up.z, forward.z, Fx.zeroFx8],
                 [Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8]
             ]);
         }

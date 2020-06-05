@@ -14,10 +14,10 @@ namespace threed {
             this.rotation = rotation;
             this.scale = scale;
 
-            this.updateTransform();
+            this.update();
         }
 
-        public updateTransform() {
+        public update() {
             this.transform = Matrix4x4.Multiply(
                 Matrix4x4.TranslationMatrix(this.position),
                 Matrix4x4.Multiply(
