@@ -40,6 +40,7 @@ namespace threed {
         render(): void;
     }
 
+    // Renderer zero -- maybe I will write Renderer one someday.
     export class Renderer0 implements IRenderer {
         private image: Image;
         private depth: number[];

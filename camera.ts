@@ -13,7 +13,7 @@ namespace threed {
         public get clippingPlanes() { return this._clippingPlanes; }
         public get transposedOrientation() { return this._transposedOrientation; }
 
-        constructor(position: Vector3, rotation: Vector3) {
+        constructor() {
             this._orientation = Matrix4x4.Identity();
             this._position = Vector3.Zero();
             // Hacky. Todo: Use a real projection matrix
