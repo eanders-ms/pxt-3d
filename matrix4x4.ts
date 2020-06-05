@@ -46,15 +46,15 @@ namespace threed {
             const O = angle;
             const s = fxsin(O);
             const c = fxcos(O);
-            const mc = Fx.sub(Fx.oneFx8, c);
+            const nc = Fx.sub(Fx.oneFx8, c);
             const x = axis.x;
             const y = axis.y;
             const z = axis.z;
 
             return new Matrix4x4([
-                [Fx.add(c, Fx.mul(Fx.mul(x, x), mc)), Fx.sub(Fx.mul(Fx.mul(x, y), mc), Fx.mul(x, s)), Fx.add(Fx.mul(Fx.mul(x, z), mc), Fx.mul(y, s)), Fx.zeroFx8],
-                [Fx.add(Fx.mul(Fx.mul(y, x), mc), Fx.mul(x, s)), Fx.add(c, Fx.mul(Fx.mul(y, y), mc)), Fx.sub(Fx.mul(Fx.mul(y, z), mc), Fx.mul(x, s)), Fx.zeroFx8],
-                [Fx.sub(Fx.mul(Fx.mul(z, x), mc), Fx.mul(y, s)), Fx.add(Fx.mul(Fx.mul(z, y), mc), Fx.mul(x, s)), Fx.add(c, Fx.mul(Fx.mul(z, z), mc)), Fx.zeroFx8],
+                [Fx.add(c, Fx.mul(Fx.mul(x, x), nc)), Fx.sub(Fx.mul(Fx.mul(x, y), nc), Fx.mul(x, s)), Fx.add(Fx.mul(Fx.mul(x, z), nc), Fx.mul(y, s)), Fx.zeroFx8],
+                [Fx.add(Fx.mul(Fx.mul(y, x), nc), Fx.mul(x, s)), Fx.add(c, Fx.mul(Fx.mul(y, y), nc)), Fx.sub(Fx.mul(Fx.mul(y, z), nc), Fx.mul(x, s)), Fx.zeroFx8],
+                [Fx.sub(Fx.mul(Fx.mul(z, x), nc), Fx.mul(y, s)), Fx.add(Fx.mul(Fx.mul(z, y), nc), Fx.mul(x, s)), Fx.add(c, Fx.mul(Fx.mul(z, z), nc)), Fx.zeroFx8],
                 [Fx.zeroFx8, Fx.zeroFx8, Fx.zeroFx8, Fx.oneFx8]
             ]);
         }
