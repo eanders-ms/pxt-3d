@@ -10,9 +10,10 @@ This library implements a perspective 3D renderer for MakeCode Arcade.
 - Renders 3D objects from the perspective of a camera.
 - Lighting models: None, Flat, Dither. Maybe more will come: greyscale, additional dithering patterns, others?
 - Primitives: Cube. More coming: Sphere, diamond, cylinder, quad, ...
-- Depth buffer (only works in simulator due to memory constraints -- I'm in search of a solution).
-- Frustum clipping (partial).
+- Depth buffer (only works in simulator due to device memory constraints -- I'm in search of a solution).
+- Frustum clipping (partially implemented).
 - Backface culling.
+- Fixed point (Fx8) linear algebra and trigonometric functions.
 
 ## TODO
 
