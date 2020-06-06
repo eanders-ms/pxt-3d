@@ -3,11 +3,23 @@
 
 ![](./media/demo.gif)
 
+This library implements a perspective 3D renderer for MakeCode Arcade.
+
+## Features
+
+- Renders 3D objects from the perspective of a camera.
+- Lighting models: None, Flat, Dither. Maybe more will come: greyscale, additional dithering patterns, others?
+- Primitives: Cube. More coming: Sphere, diamond, cylinder, quad, ...
+- Depth buffer (only works in simulator due to memory constraints -- I'm in search of a solution).
+- Frustum clipping (partial).
+- Backface culling.
+
 ## TODO
 
 - [ ] Improve perspective projection.
 - [ ] Find a way to support depth buffer on device -- currently get out-of-memory error (panic 22).
 - [ ] Proper triangle/view frustom clipping (split triangles when needed).
+- [ ] Child objects / object hierarchies.
 - [ ] Make a better looking demo scene. Maybe a spaceship flying through a city ala https://youtu.be/XezcZVu66QI?t=485 ?. Requires depth buffer.
 - [ ] Experiment with other types of lighting. More creative palettes, greyscale, etc.
 - [ ] Find performance problems and try to improve them. Goal: 30 fps when writing color to every pixel, with depth buffer.
