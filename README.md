@@ -3,7 +3,7 @@
 
 ![](./media/demo.gif)
 
-This library implements a perspective 3D renderer for MakeCode Arcade. Practical? No! Fun? Yes!
+This library implements a perspective 3D renderer for MakeCode Arcade. Practical? No. Fun? Yes!
 
 ## Features
 
