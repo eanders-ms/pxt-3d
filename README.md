@@ -8,7 +8,7 @@ This library implements a perspective 3D renderer for MakeCode Arcade.
 ## Features
 
 - Renders 3D objects from the perspective of a camera.
-- Lighting models: None, Flat, Dither. Maybe more will come: greyscale/monochrome, multi-color dithering, additional dithering patterns, others?
+- Lighting models: None, Flat, Dither. Maybe more will come: greyscale/monochrome, dramatic multi-color dithering, additional dithering patterns, others?
 - Primitives: Cube. More coming: Sphere, diamond, cylinder, quad, ...
 - Depth buffer (only works in simulator due to device memory constraints -- I'm in search of a solution).
 - Frustum clipping (partially implemented).
