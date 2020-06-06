@@ -1,6 +1,8 @@
 # pxt-3d ![Build status badge](https://github.com/eanders-ms/pxt-3d/workflows/MakeCode/badge.svg)
 
 
+![](./media/demo.gif)
+
 
 ## Use this extension
 
