@@ -3,6 +3,15 @@
 
 ![](./media/demo.gif)
 
+## TODO
+
+- [ ] Improve perspective projection.
+- [ ] Find a way to support depth buffer on device -- currently get out-of-memory error (panic 22).
+- [ ] Proper triangle/view frustom clipping (split triangles when needed).
+- [ ] Make a better looking demo scene. Maybe a spaceship flying through a city ala https://youtu.be/XezcZVu66QI?t=485 ?. Requires depth buffer.
+- [ ] Experiment with other types of lighting. More creative palettes, greyscale, etc.
+- [ ] Find performance problems and try to improve them. Goal: 30 fps when writing color to every pixel, with depth buffer.
+- [ ] Or, maybe this is fine as-is, and I'll move on to the next thing :).
 
 ## Use this extension
 
