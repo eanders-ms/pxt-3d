@@ -18,7 +18,7 @@ This library implements a perspective 3D renderer for MakeCode Arcade. Practical
 ## TODO
 
 - [ ] Improve perspective projection.
-- [ ] Find a way to support depth buffer on device -- currently get out-of-memory error (panic 22).
+- [ ] Find a way to support depth buffer on device -- currently getting an out-of-memory error (panic 22).
 - [ ] Proper triangle/view frustom clipping (split triangles when needed).
 - [ ] Child objects / object hierarchies.
 - [ ] Make a better looking demo scene. Maybe a spaceship flying through a city ala https://youtu.be/XezcZVu66QI?t=485 ?. Requires depth buffer.
