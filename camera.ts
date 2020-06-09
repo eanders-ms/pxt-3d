@@ -7,10 +7,15 @@ namespace threed {
         private _clippingPlanes: Plane[];
         private _transposedOrientation: Matrix4x4;
 
+        //% callInDebugger
         public get transform() { return this._transform; }
+        //% callInDebugger
         public get position() { return this._position; }
+        //% callInDebugger
         public get orientation() { return this._orientation; }
+        //% callInDebugger
         public get clippingPlanes() { return this._clippingPlanes; }
+        //% callInDebugger
         public get transposedOrientation() { return this._transposedOrientation; }
 
         constructor() {

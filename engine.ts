@@ -6,9 +6,13 @@ namespace threed {
         private _light: Light;
         private _renderer: IRenderer;
 
+        //% callInDebugger
         public get instances() { return this._instances; }
+        //% callInDebugger
         public get camera() { return this._camera; }
+        //% callInDebugger
         public get light() { return this._light; }
+        //% callInDebugger
         public get renderer() { return this._renderer; }
 
         constructor() {
